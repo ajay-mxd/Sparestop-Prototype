@@ -33,7 +33,12 @@ export const Landing: React.FC = () => {
 
   const handleRoleSelect = (role: 'retailer' | 'garage') => {
     setRole(role);
-    navigate(`/${role}`);
+    // Explicitly navigate to new-sale for retailer
+    if (role === 'retailer') {
+      navigate('/retailer/new-sale');
+    } else {
+      navigate(`/${role}`);
+    }
   };
 
   return (

@@ -29,9 +29,9 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     switch (role) {
       case 'retailer':
         return [
-          { icon: Home, label: 'Dashboard', path: '/retailer' },
-          { icon: ShoppingCart, label: 'New Sale', path: '/retailer/new-sale' },
+          { icon: Home, label: 'Dashboard', path: '/retailer/dashboard' },
           { icon: Package, label: 'Inventory', path: '/retailer/inventory' },
+          { icon: ShoppingCart, label: 'New Sale', path: '/retailer/new-sale' },
           { icon: Truck, label: 'Restock', path: '/retailer/order' },
           { icon: DollarSign, label: 'Payments', path: '/retailer/payments' },
         ];

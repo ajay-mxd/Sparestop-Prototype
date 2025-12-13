@@ -11,6 +11,7 @@ interface AppContextType {
   removeFromCart: (partId: string) => void;
   clearCart: () => void;
   placeOrder: (details: any) => Promise<string>;
+  processSale: (items: CartItem[], customerInfo?: string) => Promise<string>;
   sales: SalesRecord[];
   addSale: (sale: SalesRecord) => void;
   orders: Order[]; // Customer orders
@@ -33,7 +34,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
      { id: 's2', date: '2023-11-21', partName: 'Brake Pads', sku: 'BP-FR-01', amount: 1500, status: 'pending', customer: 'UP-16-5678' }
   ]);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [inventory] = useState(initialRetailers);
+  const [inventory, setInventory] = useState(initialRetailers);
   const [partsCatalog, setPartsCatalog] = useState(initialParts);
   
   // New State for Phase 2/3
@@ -88,6 +89,53 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     });
   };
 
+  const processSale = async (items: CartItem[], customerInfo: string = 'Walk-in'): Promise<string> => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // 1. Update Inventory for Retailer (Assuming current retailer is 'r1')
+        setInventory(prevRetailers => {
+          return prevRetailers.map(retailer => {
+            if (retailer.id === 'r1') {
+              const newInventory = [...retailer.inventory];
+              items.forEach(item => {
+                const invItemIndex = newInventory.findIndex(i => i.partId === item.part.id);
+                if (invItemIndex >= 0) {
+                  // Reduce stock, ensure non-negative
+                  const currentQty = newInventory[invItemIndex].quantity;
+                  newInventory[invItemIndex] = { 
+                    ...newInventory[invItemIndex], 
+                    quantity: Math.max(0, currentQty - item.quantity) 
+                  };
+                }
+              });
+              return { ...retailer, inventory: newInventory };
+            }
+            return retailer;
+          });
+        });
+
+        // 2. Add Sales Records
+        const date = new Date().toISOString().split('T')[0];
+        const newSales: SalesRecord[] = items.map(item => ({
+          id: `SALE-${Math.floor(Math.random() * 100000)}`,
+          date,
+          partName: item.part.name,
+          sku: item.part.sku,
+          amount: item.part.price * item.quantity,
+          status: 'paid',
+          customer: customerInfo
+        }));
+        
+        setSales(prev => [...newSales, ...prev]);
+        
+        // 3. Clear Cart
+        clearCart();
+        
+        resolve('success');
+      }, 1500);
+    });
+  };
+
   const placeWarehouseOrder = async (items: { part: Part; quantity: number }[]): Promise<string> => {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -134,6 +182,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       removeFromCart,
       clearCart,
       placeOrder,
+      processSale,
       sales,
       addSale,
       orders,
