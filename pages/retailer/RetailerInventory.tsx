@@ -1,0 +1,59 @@
+import React from 'react';
+import { useApp } from '../../context/AppContext';
+import { Package, AlertTriangle } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+export const RetailerInventory: React.FC = () => {
+  const { inventory, partsCatalog } = useApp();
+  // Assume we are "r1"
+  const myInventory = inventory.find(r => r.id === 'r1')?.inventory || [];
+
+  const inventoryWithDetails = myInventory.map(item => {
+    const part = partsCatalog.find(p => p.id === item.partId);
+    return { ...item, part };
+  }).filter(i => i.part !== undefined);
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-textPrimary">My Inventory</h1>
+        <Link to="/retailer/order" className="text-primary font-medium hover:underline flex items-center">
+          <Package className="mr-2" size={18} /> Order Stock
+        </Link>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {inventoryWithDetails.map(item => (
+          <div key={item.partId} className="bg-white p-4 rounded-xl shadow-sm border border-border">
+            <div className="flex justify-between items-start">
+               <div>
+                 <h3 className="font-bold text-textPrimary">{item.part!.name}</h3>
+                 <p className="text-xs text-textSecondary">{item.part!.sku}</p>
+               </div>
+               <span className={`px-2 py-1 rounded text-xs font-bold ${item.quantity < 3 ? 'bg-red-100 text-error' : 'bg-green-100 text-success'}`}>
+                 {item.quantity} In Stock
+               </span>
+            </div>
+            
+            <div className="mt-4 flex justify-between items-end">
+              <div>
+                <div className="text-xs text-textSecondary">Selling Price</div>
+                <div className="font-bold text-primary">₹{item.part!.price}</div>
+              </div>
+              {item.quantity < 3 && (
+                <div className="flex items-center text-xs text-warning">
+                  <AlertTriangle size={12} className="mr-1" /> Low Stock
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+        {inventoryWithDetails.length === 0 && (
+          <div className="col-span-full py-12 text-center text-textSecondary bg-white rounded-xl border border-dashed border-border">
+            No items in inventory. Start by ordering from the warehouse.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

@@ -1,0 +1,157 @@
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { Role, CartItem, Part, SalesRecord, Order, WarehouseOrder, Invoice } from '../types';
+import { retailers as initialRetailers } from '../data/retailers';
+import { parts as initialParts } from '../data/parts';
+
+interface AppContextType {
+  role: Role;
+  setRole: (role: Role) => void;
+  cart: CartItem[];
+  addToCart: (part: Part, quantity?: number) => void;
+  removeFromCart: (partId: string) => void;
+  clearCart: () => void;
+  placeOrder: (details: any) => Promise<string>;
+  sales: SalesRecord[];
+  addSale: (sale: SalesRecord) => void;
+  orders: Order[]; // Customer orders
+  warehouseOrders: WarehouseOrder[]; // Retailer restocking orders
+  placeWarehouseOrder: (items: { part: Part; quantity: number }[]) => Promise<string>;
+  invoices: Invoice[];
+  payInvoice: (id: string) => void;
+  inventory: typeof initialRetailers;
+  partsCatalog: Part[];
+  updatePartStock: (partId: string, newStock: number) => void;
+}
+
+const AppContext = createContext<AppContextType | undefined>(undefined);
+
+export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [role, setRole] = useState<Role>(null);
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [sales, setSales] = useState<SalesRecord[]>([
+     { id: 's1', date: '2023-11-20', partName: 'Oil Filter', sku: 'BP-2891', amount: 250, status: 'paid', customer: 'DL-3C-1234' },
+     { id: 's2', date: '2023-11-21', partName: 'Brake Pads', sku: 'BP-FR-01', amount: 1500, status: 'pending', customer: 'UP-16-5678' }
+  ]);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [inventory] = useState(initialRetailers);
+  const [partsCatalog, setPartsCatalog] = useState(initialParts);
+  
+  // New State for Phase 2/3
+  const [warehouseOrders, setWarehouseOrders] = useState<WarehouseOrder[]>([
+    { 
+      id: 'WO-1001', date: '2023-11-15', total: 45000, status: 'shipped',
+      items: [{ part: initialParts[0], quantity: 50 }, { part: initialParts[3], quantity: 20 }] 
+    }
+  ]);
+  
+  const [invoices, setInvoices] = useState<Invoice[]>([
+    { id: 'INV-2023-001', date: '2023-11-15', amount: 45000, dueDate: '2023-12-15', status: 'pending', orderId: 'WO-1001' },
+    { id: 'INV-2023-002', date: '2023-10-01', amount: 12000, dueDate: '2023-11-01', status: 'paid', orderId: 'WO-0998' }
+  ]);
+
+  const addToCart = (part: Part, quantity: number = 1) => {
+    setCart(prev => {
+      const existing = prev.find(item => item.part.id === part.id);
+      if (existing) {
+        return prev.map(item => item.part.id === part.id ? { ...item, quantity: item.quantity + quantity } : item);
+      }
+      return [...prev, { part, quantity }];
+    });
+  };
+
+  const removeFromCart = (partId: string) => {
+    setCart(prev => prev.filter(item => item.part.id !== partId));
+  };
+
+  const clearCart = () => setCart([]);
+
+  const addSale = (sale: SalesRecord) => {
+    setSales(prev => [sale, ...prev]);
+  };
+
+  const placeOrder = async (details: any): Promise<string> => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const newOrder: Order = {
+          id: `ORD-${Math.floor(Math.random() * 10000)}`,
+          date: new Date().toISOString().split('T')[0],
+          items: [...cart],
+          total: cart.reduce((sum, item) => sum + item.part.price * item.quantity, 0),
+          status: 'processing',
+          retailerName: details.retailerName,
+          eta: '5-6 hours'
+        };
+        setOrders(prev => [newOrder, ...prev]);
+        clearCart();
+        resolve(newOrder.id);
+      }, 1500);
+    });
+  };
+
+  const placeWarehouseOrder = async (items: { part: Part; quantity: number }[]): Promise<string> => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const total = items.reduce((sum, item) => sum + (item.part.price * 0.7 * item.quantity), 0); // Wholesale price is 70% of MRP
+        const newOrder: WarehouseOrder = {
+          id: `WO-${Math.floor(Math.random() * 10000)}`,
+          date: new Date().toISOString().split('T')[0],
+          items,
+          total,
+          status: 'pending'
+        };
+        setWarehouseOrders(prev => [newOrder, ...prev]);
+        
+        // Auto-generate invoice
+        const newInvoice: Invoice = {
+          id: `INV-${Math.floor(Math.random() * 10000)}`,
+          date: new Date().toISOString().split('T')[0],
+          amount: total,
+          dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          status: 'pending',
+          orderId: newOrder.id
+        };
+        setInvoices(prev => [newInvoice, ...prev]);
+        
+        resolve(newOrder.id);
+      }, 1000);
+    });
+  };
+
+  const payInvoice = (id: string) => {
+    setInvoices(prev => prev.map(inv => inv.id === id ? { ...inv, status: 'paid' } : inv));
+  };
+
+  const updatePartStock = (partId: string, newStock: number) => {
+    setPartsCatalog(prev => prev.map(p => p.id === partId ? { ...p, warehouseStock: newStock } : p));
+  };
+
+  return (
+    <AppContext.Provider value={{
+      role,
+      setRole,
+      cart,
+      addToCart,
+      removeFromCart,
+      clearCart,
+      placeOrder,
+      sales,
+      addSale,
+      orders,
+      warehouseOrders,
+      placeWarehouseOrder,
+      invoices,
+      payInvoice,
+      inventory,
+      partsCatalog,
+      updatePartStock
+    }}>
+      {children}
+    </AppContext.Provider>
+  );
+};
+
+export const useApp = () => {
+  const context = useContext(AppContext);
+  if (!context) throw new Error("useApp must be used within AppProvider");
+  return context;
+};
