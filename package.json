@@ -23,6 +23,7 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
+    "vercel-build": "tsc && vite build",
     "preview": "vite preview"
   },
   "browserslist": {
