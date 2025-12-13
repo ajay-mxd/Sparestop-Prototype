@@ -64,7 +64,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       {/* Mobile Header */}
       <div className="md:hidden bg-primary text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-md">
         <div className="flex items-center space-x-2">
-          <div className="font-bold text-xl">SpareStop</div>
+          <div className="font-bold text-xl">Sparestop</div>
           <span className="text-xs bg-white/20 px-2 py-0.5 rounded capitalize">{role}</span>
         </div>
         <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -74,15 +74,15 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
       {/* Sidebar / Mobile Menu */}
       <div className={cn(
-        "bg-white border-r border-border md:w-64 fixed md:sticky md:top-0 h-full z-40 transition-transform duration-300 ease-in-out md:translate-x-0 w-64 shadow-xl md:shadow-none",
+        "bg-white border-r border-border md:w-64 fixed md:sticky md:top-0 h-full z-40 transition-transform duration-300 ease-in-out md:translate-x-0 w-64 shadow-xl md:shadow-none flex flex-col",
         isMenuOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="p-6 hidden md:block">
-          <h1 className="text-2xl font-bold text-primary">SpareStop</h1>
+          <h1 className="text-2xl font-bold text-primary">Sparestop</h1>
           <p className="text-sm text-textSecondary capitalize mt-1">{role} Portal</p>
         </div>
 
-        <nav className="p-4 space-y-2">
+        <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path + '/'));
             const Icon = item.icon;
@@ -110,7 +110,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           })}
         </nav>
 
-        <div className="absolute bottom-0 w-full p-4 border-t border-border">
+        <div className="p-4 border-t border-border">
           <button 
             onClick={handleLogout}
             className="flex items-center space-x-3 px-4 py-3 text-error w-full hover:bg-red-50 rounded-lg transition-colors"
@@ -144,7 +144,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                 <div className="relative">
                   <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
                   {item.badge ? (
-                    <span className="absolute -top-1 -right-2 bg-secondary text-white text-[10px] px-1.5 rounded-full min-w-[16px] text-center">
+                    <span className="absolute -top-1 -right-2 bg-secondary text-white text-xs px-1.5 rounded-full min-w-[16px] text-center">
                       {item.badge}
                     </span>
                   ) : null}
