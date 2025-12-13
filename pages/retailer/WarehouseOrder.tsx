@@ -46,10 +46,10 @@ export const WarehouseOrder: React.FC = () => {
   const totalEstimate = orderCart.reduce((acc, item) => acc + (item.part.price * 0.7 * item.quantity), 0); // 70% of MRP
 
   return (
-    <div className="space-y-6 h-[calc(100vh-100px)] flex flex-col">
-      <div className="flex justify-between items-center">
+    <div className="space-y-6 h-auto md:h-[calc(100vh-100px)] flex flex-col pb-20 md:pb-0">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
         <h1 className="text-2xl font-bold text-textPrimary">Restock Inventory</h1>
-        <div className="text-sm text-textSecondary bg-blue-50 px-3 py-1 rounded">
+        <div className="text-sm text-textSecondary bg-blue-50 px-3 py-1 rounded w-fit">
           Wholesale Rate: 70% of MRP
         </div>
       </div>
@@ -60,9 +60,9 @@ export const WarehouseOrder: React.FC = () => {
         </div>
       )}
 
-      <div className="flex gap-6 flex-1 overflow-hidden">
+      <div className="flex flex-col md:flex-row gap-6 flex-1 overflow-hidden">
         {/* Catalog */}
-        <div className="flex-1 flex flex-col bg-white rounded-xl shadow-sm border border-border overflow-hidden">
+        <div className="flex-1 flex flex-col bg-white rounded-xl shadow-sm border border-border overflow-hidden min-h-[400px]">
           <div className="p-4 border-b border-border">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-textSecondary" size={18} />
@@ -100,7 +100,7 @@ export const WarehouseOrder: React.FC = () => {
         </div>
 
         {/* Order Summary */}
-        <div className="w-80 bg-white rounded-xl shadow-sm border border-border flex flex-col overflow-hidden">
+        <div className="w-full md:w-80 bg-white rounded-xl shadow-sm border border-border flex flex-col overflow-hidden min-h-[300px] md:min-h-0">
           <div className="p-4 bg-gray-50 border-b border-border font-bold flex items-center gap-2">
             <ShoppingCart size={18} /> Order Manifest
           </div>

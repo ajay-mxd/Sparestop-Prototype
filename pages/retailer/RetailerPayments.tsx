@@ -6,10 +6,53 @@ export const RetailerPayments: React.FC = () => {
   const { invoices, payInvoice } = useApp();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-20">
       <h1 className="text-2xl font-bold text-textPrimary">Invoices & Payments</h1>
 
-      <div className="bg-white rounded-xl shadow-sm border border-border overflow-hidden">
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-4">
+        {invoices.map(inv => (
+          <div key={inv.id} className="bg-white p-4 rounded-xl shadow-sm border border-border">
+            <div className="flex justify-between items-start mb-3">
+              <div className="flex items-center gap-2">
+                 <div className="p-2 bg-blue-50 rounded-lg">
+                   <FileText size={20} className="text-primary" />
+                 </div>
+                 <div>
+                   <div className="font-bold text-sm">{inv.id}</div>
+                   <div className="text-xs text-textSecondary">{inv.date}</div>
+                 </div>
+              </div>
+              <div className="text-right">
+                <div className="font-bold text-lg">₹{inv.amount.toLocaleString()}</div>
+                {inv.status === 'paid' ? (
+                  <span className="text-xs text-success font-medium flex items-center justify-end">
+                    <CheckCircle size={12} className="mr-1" /> Paid
+                  </span>
+                ) : (
+                  <span className="text-xs text-warning font-medium flex items-center justify-end">
+                    <Clock size={12} className="mr-1" /> Pending
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="flex justify-between items-center pt-3 border-t border-gray-50">
+               <span className="text-xs text-textSecondary font-mono">Ref: {inv.orderId}</span>
+               {inv.status !== 'paid' && (
+                  <button 
+                    onClick={() => payInvoice(inv.id)}
+                    className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600"
+                  >
+                    Pay Now
+                  </button>
+               )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden md:block bg-white rounded-xl shadow-sm border border-border overflow-hidden">
         <table className="w-full text-left">
           <thead className="bg-gray-50 border-b border-border text-xs uppercase text-textSecondary font-semibold">
             <tr>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { 
-  Menu, X, Home, ShoppingCart, Package, Truck, DollarSign, LogOut, Search, MapPin, Scan
+  Menu, X, Home, ShoppingCart, Package, Truck, IndianRupee, LogOut, Search, MapPin, Scan
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -33,7 +33,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           { icon: Package, label: 'Inventory', path: '/retailer/inventory' },
           { icon: ShoppingCart, label: 'New Sale', path: '/retailer/new-sale' },
           { icon: Truck, label: 'Restock', path: '/retailer/order' },
-          { icon: DollarSign, label: 'Payments', path: '/retailer/payments' },
+          { icon: IndianRupee, label: 'Payments', path: '/retailer/payments' },
         ];
       case 'garage':
         return [
@@ -58,9 +58,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           <div className="font-bold text-xl">Sparestop</div>
           <span className="text-xs bg-white/20 px-2 py-0.5 rounded capitalize">{role}</span>
         </div>
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        {/* Hamburger menu removed as per request */}
       </div>
 
       {/* Sidebar / Mobile Menu */}

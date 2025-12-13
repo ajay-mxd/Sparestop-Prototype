@@ -3,7 +3,7 @@ import { useApp } from '../../context/AppContext';
 import { vehicles } from '../../data/vehicles';
 import { partCategories } from '../../data/parts';
 import { Part } from '../../types';
-import { Search, ShoppingCart, Plus, Check, Truck, Box, Trash2, ArrowRight, Wrench } from 'lucide-react';
+import { Search, Plus, Check, Truck, Box, Trash2, ArrowRight, Wrench, ChevronUp, ChevronDown } from 'lucide-react';
 import * as Icons from 'lucide-react';
 
 export const NewSale: React.FC = () => {
@@ -29,6 +29,7 @@ export const NewSale: React.FC = () => {
   const [searchResults, setSearchResults] = useState<Part[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState('');
+  const [isCartExpanded, setIsCartExpanded] = useState(false);
 
   // Helpers
   const myInventory = inventory.find(r => r.id === 'r1')?.inventory || [];
@@ -86,6 +87,7 @@ export const NewSale: React.FC = () => {
     await processSale(cart);
     setOrderSuccess('Sale recorded successfully! Inventory updated.');
     setIsProcessing(false);
+    setIsCartExpanded(false);
     setTimeout(() => setOrderSuccess(''), 4000);
   };
 
@@ -97,7 +99,7 @@ export const NewSale: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 pb-24">
+    <div className="space-y-6 pb-32">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-textPrimary">New Sale</h1>
       </div>
@@ -125,7 +127,7 @@ export const NewSale: React.FC = () => {
           </button>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 md:p-6">
           {/* VEHICLE FIRST TAB */}
           {activeTab === 'vehicle' && (
             <div className="space-y-6">
@@ -241,9 +243,10 @@ export const NewSale: React.FC = () => {
                           </div>
                           <button 
                             onClick={() => addToCart(part)}
-                            className="p-2 bg-primary text-white rounded-lg hover:bg-blue-700 shadow-sm"
+                            className="p-2 bg-primary text-white rounded-lg hover:bg-blue-700 shadow-sm flex items-center gap-1"
                           >
                             <Plus size={20} />
+                            <span className="md:hidden text-sm font-bold pr-1">Add</span>
                           </button>
                         </div>
                       </div>
@@ -258,7 +261,7 @@ export const NewSale: React.FC = () => {
           {activeTab === 'part' && (
             <div className="space-y-6">
               {step === 'cat' && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-4 gap-2 md:gap-4">
                    {partCategories.map(cat => {
                     // @ts-ignore
                     const IconComponent = Icons[cat.icon] || Icons.Box;
@@ -266,10 +269,10 @@ export const NewSale: React.FC = () => {
                       <button 
                         key={cat.id} 
                         onClick={() => { setSelectedCat(cat.name); setStep('form'); }}
-                        className="flex flex-col items-center p-6 border border-border rounded-xl hover:border-primary hover:bg-blue-50 transition-all"
+                        className="flex flex-col items-center p-2 md:p-6 border border-border rounded-xl hover:border-primary hover:bg-blue-50 transition-all aspect-square md:aspect-auto justify-center"
                       >
-                        <IconComponent size={32} className="text-primary mb-3" />
-                        <span className="font-bold text-textPrimary">{cat.name}</span>
+                        <IconComponent size={24} className="text-primary mb-2 md:mb-3 md:w-8 md:h-8" />
+                        <span className="text-[10px] md:text-base font-bold text-textPrimary text-center leading-tight">{cat.name}</span>
                       </button>
                     );
                    })}
@@ -390,9 +393,10 @@ export const NewSale: React.FC = () => {
                             </div>
                             <button 
                               onClick={() => addToCart(part)}
-                              className="p-2 bg-primary text-white rounded-lg hover:bg-blue-700 shadow-sm"
+                              className="p-2 bg-primary text-white rounded-lg hover:bg-blue-700 shadow-sm flex items-center gap-1"
                             >
                               <Plus size={20} />
+                              <span className="md:hidden text-sm font-bold pr-1">Add</span>
                             </button>
                           </div>
                         </div>
@@ -408,21 +412,37 @@ export const NewSale: React.FC = () => {
 
       {/* Cart Drawer / Bottom Bar */}
       {cart.length > 0 && (
-        <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-white border-t border-border shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-30 pb-safe">
-          <div className="max-w-4xl mx-auto p-4 flex flex-col md:flex-row justify-between items-center gap-4">
-             {/* Cart Items Summary (Mobile optimized) */}
-             <div className="w-full md:w-auto flex-1 max-h-32 overflow-y-auto hidden md:block">
+        <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-white border-t border-border shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-30 pb-safe transition-all duration-300">
+          <div className="max-w-4xl mx-auto p-4">
+             {/* Mobile Toggle Handle */}
+             <div className="md:hidden flex justify-center -mt-8 pb-4">
+               <button 
+                 onClick={() => setIsCartExpanded(!isCartExpanded)}
+                 className="bg-white border border-border px-4 py-1 rounded-t-lg shadow-sm text-primary flex items-center gap-1 text-xs font-bold"
+               >
+                 {isCartExpanded ? <ChevronDown size={14}/> : <ChevronUp size={14}/>} 
+                 {isCartExpanded ? 'Hide Items' : `View ${cart.length} Items`}
+               </button>
+             </div>
+
+             {/* Cart Items Summary */}
+             <div className={`w-full overflow-y-auto transition-all duration-300 ${isCartExpanded ? 'max-h-64 mb-4' : 'max-h-0 md:max-h-32 md:mb-0'}`}>
                 {cart.map(item => (
-                  <div key={item.part.id} className="flex justify-between items-center text-sm py-1 border-b border-gray-100 last:border-0">
-                    <span className="truncate w-40">{item.part.name}</span>
-                    <span className="mx-2 text-gray-400">x{item.quantity}</span>
-                    <span className="font-bold">₹{item.part.price * item.quantity}</span>
-                    <button onClick={() => removeFromCart(item.part.id)} className="ml-2 text-red-400 hover:text-red-600"><Trash2 size={14}/></button>
+                  <div key={item.part.id} className="flex justify-between items-center text-sm py-2 border-b border-gray-100 last:border-0">
+                    <div className="flex flex-col md:flex-row md:items-center">
+                       <span className="truncate w-full md:w-40 font-medium">{item.part.name}</span>
+                       <span className="text-xs text-textSecondary md:hidden">{item.part.sku}</span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="mx-2 text-gray-500 text-xs">x{item.quantity}</span>
+                      <span className="font-bold">₹{item.part.price * item.quantity}</span>
+                      <button onClick={() => removeFromCart(item.part.id)} className="ml-2 text-red-400 hover:text-red-600"><Trash2 size={14}/></button>
+                    </div>
                   </div>
                 ))}
              </div>
              
-             <div className="w-full md:w-auto flex items-center justify-between gap-6">
+             <div className="flex items-center justify-between gap-6 pt-2">
                <div>
                  <p className="text-sm text-textSecondary">{cart.length} Items</p>
                  <p className="text-2xl font-bold text-primary">₹{cart.reduce((sum, i) => sum + (i.part.price * i.quantity), 0)}</p>
@@ -430,9 +450,9 @@ export const NewSale: React.FC = () => {
                <button
                  onClick={handleCompleteSale}
                  disabled={isProcessing}
-                 className="flex-1 md:flex-none bg-green-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-green-700 disabled:opacity-50 shadow-lg flex items-center justify-center min-w-[160px]"
+                 className="flex-1 md:flex-none bg-green-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-700 disabled:opacity-50 shadow-lg flex items-center justify-center min-w-[140px]"
                >
-                 {isProcessing ? 'Processing...' : 'Complete Sale'}
+                 {isProcessing ? '...' : 'Complete Sale'}
                </button>
              </div>
           </div>
