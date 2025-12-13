@@ -1,4 +1,4 @@
-export type Role = 'wholesaler' | 'retailer' | 'garage' | null;
+export type Role = 'retailer' | 'garage' | null;
 
 export interface Vehicle {
   id: string;

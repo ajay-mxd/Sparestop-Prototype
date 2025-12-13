@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { 
-  Menu, X, Home, ShoppingCart, Package, Users, BarChart, 
-  MapPin, Scan, Truck, DollarSign, LogOut, Search, Activity
+  Menu, X, Home, ShoppingCart, Package, Truck, DollarSign, LogOut, Search, MapPin, Scan
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -28,20 +27,12 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   const getNavItems = () => {
     switch (role) {
-      case 'wholesaler':
-        return [
-          { icon: Home, label: 'Dashboard', path: '/wholesaler' },
-          { icon: Package, label: 'Inventory', path: '/wholesaler/inventory' },
-          { icon: Users, label: 'Retailers', path: '/wholesaler/retailers' },
-          { icon: Activity, label: 'Sales', path: '/wholesaler/sales' },
-          { icon: BarChart, label: 'Analytics', path: '/wholesaler/analytics' },
-        ];
       case 'retailer':
         return [
           { icon: Home, label: 'Dashboard', path: '/retailer' },
           { icon: ShoppingCart, label: 'New Sale', path: '/retailer/new-sale' },
-          { icon: Package, label: 'My Inventory', path: '/retailer/inventory' },
-          { icon: Truck, label: 'Warehouse Order', path: '/retailer/order' },
+          { icon: Package, label: 'Inventory', path: '/retailer/inventory' },
+          { icon: Truck, label: 'Restock', path: '/retailer/order' },
           { icon: DollarSign, label: 'Payments', path: '/retailer/payments' },
         ];
       case 'garage':
@@ -126,8 +117,8 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         {children}
       </main>
 
-      {/* Mobile Bottom Nav (Garage Only) */}
-      {role === 'garage' && (
+      {/* Mobile Bottom Nav (Garage & Retailer) */}
+      {(role === 'garage' || role === 'retailer') && (
         <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-border flex justify-around p-2 z-50 pb-safe">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;

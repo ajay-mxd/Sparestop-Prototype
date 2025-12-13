@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import { Users, Wrench, Lock, ArrowRight } from 'lucide-react';
+import { Users, Wrench, ArrowRight } from 'lucide-react';
 
 const RoleCard: React.FC<{ 
   title: string; 
@@ -31,7 +31,7 @@ export const Landing: React.FC = () => {
   const { setRole } = useApp();
   const navigate = useNavigate();
 
-  const handleRoleSelect = (role: 'wholesaler' | 'retailer' | 'garage') => {
+  const handleRoleSelect = (role: 'retailer' | 'garage') => {
     setRole(role);
     navigate(`/${role}`);
   };
@@ -43,12 +43,6 @@ export const Landing: React.FC = () => {
         <div>
           <span className="text-2xl font-bold text-slate-900">Sparestop</span>
         </div>
-        <button 
-          onClick={() => handleRoleSelect('wholesaler')}
-          className="text-sm font-medium text-slate-500 hover:text-slate-900 flex items-center gap-2 transition-colors"
-        >
-          <Lock size={14} /> Admin Login
-        </button>
       </nav>
 
       {/* Main Content */}
