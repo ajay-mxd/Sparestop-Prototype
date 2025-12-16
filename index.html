@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="https://lucide.dev/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover" />
     <meta name="theme-color" content="#020617" />
     <meta
       name="description"
@@ -44,6 +44,8 @@
         --color-text-primary: 15 23 42;   /* #0F172A (Slate 900) */
         --color-text-secondary: 100 116 139; /* #64748B (Slate 500) */
         --color-border: 226 232 240;      /* #E2E8F0 (Slate 200) */
+        --safe-area-top: env(safe-area-inset-top, 0px);
+        --safe-area-bottom: env(safe-area-inset-bottom, 0px);
       }
       
       .dark {
@@ -78,6 +80,10 @@
       input::placeholder {
         color: rgb(var(--color-text-secondary));
       }
+      
+      /* Safe area padding utilities */
+      .pt-safe { padding-top: var(--safe-area-top); }
+      .pb-safe { padding-bottom: var(--safe-area-bottom); }
     </style>
   <script type="importmap">
 {

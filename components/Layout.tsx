@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { 
-  Menu, X, Home, ShoppingCart, Package, Truck, IndianRupee, LogOut, Search, MapPin, Scan, Sun, Moon
+  Menu, X, Home, ShoppingCart, Package, Truck, IndianRupee, LogOut, Search, MapPin, Scan, Sun, Moon, ChevronLeft
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -17,6 +17,11 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     setRole(null);
@@ -50,24 +55,58 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   const navItems = getNavItems();
 
+  // Logic to determine if Back button should be shown
+  // Show on all pages except the 'Home' of the respective role
+  const isHome = location.pathname === '/' || 
+                 location.pathname === '/garage' || 
+                 location.pathname === '/retailer/dashboard';
+  
+  // Show back button on any page that isn't the main landing/home of the logged-in role
+  const showBackButton = !isHome;
+
+  const pageTitle = navItems.find(item => item.path === location.pathname)?.label || 'Sparestop';
+
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row transition-colors duration-300">
-      {/* Mobile Header */}
-      <div className="md:hidden bg-surface border-b border-border p-4 flex justify-between items-center sticky top-0 z-50 shadow-md">
-        <div className="flex items-center space-x-2">
-          <div className="font-bold text-xl text-primary">Sparestop</div>
-          <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded capitalize">{role}</span>
+      
+      {/* Mobile Header (Apple Style) */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md border-b border-border pt-safe">
+        <div className="flex items-center justify-between h-[52px] px-4">
+          {/* Left: Back Button or Empty */}
+          <div className="flex-1 flex items-start">
+            {showBackButton && (
+              <button 
+                onClick={() => navigate(-1)}
+                className="flex items-center text-primary -ml-2 px-2 py-1 active:opacity-50 transition-opacity"
+              >
+                <ChevronLeft size={28} strokeWidth={2.5} />
+                <span className="text-base font-medium leading-none mb-0.5">Back</span>
+              </button>
+            )}
+          </div>
+
+          {/* Center: Title/Logo */}
+          <div className="flex-[2] flex justify-center items-center">
+             <span className="font-semibold text-lg text-textPrimary truncate">
+               {location.pathname === '/garage' || location.pathname === '/retailer/dashboard' ? 'Sparestop' : pageTitle}
+             </span>
+          </div>
+
+          {/* Right: Theme Toggle / Actions */}
+          <div className="flex-1 flex justify-end">
+            <button 
+              onClick={toggleTheme} 
+              className="p-2 -mr-2 rounded-full text-textSecondary hover:text-primary transition-colors active:scale-95 transform"
+              aria-label="Toggle Theme"
+            >
+              {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
+            </button>
+          </div>
         </div>
-        
-        {/* Theme Toggle for Mobile */}
-        <button 
-          onClick={toggleTheme} 
-          className="p-2 rounded-full hover:bg-background text-textSecondary hover:text-primary transition-colors"
-          aria-label="Toggle Theme"
-        >
-          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
       </div>
+
+      {/* Spacer for Fixed Header on Mobile */}
+      <div className="md:hidden h-[52px] pt-safe w-full flex-shrink-0"></div>
 
       {/* Sidebar / Desktop Menu */}
       <div className={cn(
@@ -129,13 +168,13 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto h-screen scroll-smooth pb-24 md:pb-8 bg-background">
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto min-h-[calc(100vh-52px)] md:h-screen scroll-smooth pb-24 md:pb-8 bg-background">
         {children}
       </main>
 
       {/* Mobile Bottom Nav (Garage & Retailer) */}
       {(role === 'garage' || role === 'retailer') && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-surface border-t border-border flex justify-around p-2 z-50 pb-safe">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-surface/90 backdrop-blur-lg border-t border-border flex justify-around p-2 z-50 pb-safe shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             const Icon = item.icon;
@@ -144,19 +183,19 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex flex-col items-center p-2 rounded-lg text-xs",
+                  "flex flex-col items-center p-2 rounded-lg text-xs w-full active:scale-95 transition-transform",
                   isActive ? "text-primary" : "text-textSecondary"
                 )}
               >
-                <div className="relative">
+                <div className="relative mb-1">
                   <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
                   {item.badge ? (
-                    <span className="absolute -top-1 -right-2 bg-secondary text-white text-xs px-1.5 rounded-full min-w-[16px] text-center">
+                    <span className="absolute -top-1 -right-2 bg-secondary text-white text-xs px-1 rounded-full min-w-[16px] h-[16px] flex items-center justify-center border border-surface">
                       {item.badge}
                     </span>
                   ) : null}
                 </div>
-                <span className="mt-1">{item.label}</span>
+                <span className="text-[10px] font-medium">{item.label}</span>
               </Link>
             );
           })}
