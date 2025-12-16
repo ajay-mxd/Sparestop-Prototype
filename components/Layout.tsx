@@ -67,17 +67,16 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       {/* Mobile Header (Apple Style) */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md border-b border-border pt-safe transition-all duration-300">
         <div className="flex items-center justify-between h-[52px] px-4">
-          {/* Left: Home Button (only on sub-pages) */}
+          {/* Left: Switch Role Button (Replaces Home/Back) */}
           <div className="flex-1 flex items-start">
-            {!isDashboard && (
-              <button 
-                onClick={() => navigate(dashboardPath)}
-                className="flex items-center text-primary -ml-2 px-2 py-1 active:opacity-50 transition-opacity group"
-                aria-label="Go Home"
-              >
-                <Home size={24} strokeWidth={2.5} className="group-active:scale-95 transition-transform" />
-              </button>
-            )}
+            <button 
+              onClick={handleLogout}
+              className="flex items-center text-textSecondary -ml-2 px-2 py-1 active:opacity-50 transition-opacity group hover:text-error"
+              aria-label="Switch Role"
+            >
+              <LogOut size={20} className="mr-1 group-active:scale-95 transition-transform" />
+              <span className="text-sm font-medium">Switch</span>
+            </button>
           </div>
 
           {/* Center: Title/Logo */}
