@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { 
-  Menu, X, Home, ShoppingCart, Package, Truck, IndianRupee, LogOut, Search, MapPin, Scan, Sun, Moon, ChevronLeft
+  Home, ShoppingCart, Package, Truck, IndianRupee, LogOut, Search, MapPin, Scan
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -13,7 +13,7 @@ function cn(...inputs: (string | undefined | null | false)[]) {
 }
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { role, setRole, cart, theme, toggleTheme } = useApp();
+  const { role, setRole, cart } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -55,10 +55,9 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   const navItems = getNavItems();
 
-  // Show back button on all authenticated pages in the mobile header
-  // logic: always show if we are in this layout (which implies role is set)
-  // Exception: technically the root '/' doesn't use this layout return, so we are safe.
-  const showBackButton = true;
+  // Determine if we are on the main dashboard page for the role
+  const dashboardPath = role === 'retailer' ? '/retailer/dashboard' : '/garage';
+  const isDashboard = location.pathname === dashboardPath;
 
   const pageTitle = navItems.find(item => item.path === location.pathname)?.label || 'Sparestop';
 
@@ -68,15 +67,15 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       {/* Mobile Header (Apple Style) */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md border-b border-border pt-safe transition-all duration-300">
         <div className="flex items-center justify-between h-[52px] px-4">
-          {/* Left: Back Button */}
+          {/* Left: Home Button (only on sub-pages) */}
           <div className="flex-1 flex items-start">
-            {showBackButton && (
+            {!isDashboard && (
               <button 
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(dashboardPath)}
                 className="flex items-center text-primary -ml-2 px-2 py-1 active:opacity-50 transition-opacity group"
+                aria-label="Go Home"
               >
-                <ChevronLeft size={28} strokeWidth={2.5} className="group-active:-translate-x-0.5 transition-transform" />
-                <span className="text-base font-medium leading-none mb-0.5">Back</span>
+                <Home size={24} strokeWidth={2.5} className="group-active:scale-95 transition-transform" />
               </button>
             )}
           </div>
@@ -84,19 +83,13 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           {/* Center: Title/Logo */}
           <div className="flex-[2] flex justify-center items-center">
              <span className="font-semibold text-lg text-textPrimary truncate">
-               {location.pathname === '/garage' || location.pathname === '/retailer/dashboard' ? 'Sparestop' : pageTitle}
+               {isDashboard ? 'Sparestop' : pageTitle}
              </span>
           </div>
 
-          {/* Right: Theme Toggle / Actions */}
+          {/* Right: Empty (Theme Toggle Removed) */}
           <div className="flex-1 flex justify-end">
-            <button 
-              onClick={toggleTheme} 
-              className="p-2 -mr-2 rounded-full text-textSecondary hover:text-primary transition-colors active:scale-95 transform"
-              aria-label="Toggle Theme"
-            >
-              {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
-            </button>
+            {/* Space reserved for balance */}
           </div>
         </div>
       </div>
@@ -145,14 +138,6 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         </nav>
 
         <div className="p-4 border-t border-border space-y-2">
-           <button 
-            onClick={toggleTheme}
-            className="flex items-center space-x-3 px-4 py-3 text-textSecondary w-full hover:bg-background/50 rounded-lg transition-colors hidden md:flex"
-          >
-            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-            <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
-          </button>
-
           <button 
             onClick={handleLogout}
             className="flex items-center space-x-3 px-4 py-3 text-error w-full hover:bg-red-500/10 rounded-lg transition-colors"
