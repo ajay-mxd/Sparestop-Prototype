@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import { Users, Wrench, ArrowRight } from 'lucide-react';
+import { Users, Wrench, ArrowRight, Sun, Moon } from 'lucide-react';
 
 const RoleCard: React.FC<{ 
   title: string; 
@@ -28,7 +28,7 @@ const RoleCard: React.FC<{
 );
 
 export const Landing: React.FC = () => {
-  const { setRole } = useApp();
+  const { setRole, theme, toggleTheme } = useApp();
   const navigate = useNavigate();
 
   const handleRoleSelect = (role: 'retailer' | 'garage') => {
@@ -42,12 +42,21 @@ export const Landing: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col transition-colors duration-300">
       {/* Navbar for Landing */}
       <nav className="p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
         <div>
           <span className="text-2xl font-bold text-textPrimary">Sparestop</span>
         </div>
+        
+        {/* Theme Toggle */}
+        <button 
+          onClick={toggleTheme} 
+          className="p-2 rounded-full hover:bg-surface text-textSecondary hover:text-primary transition-colors border border-transparent hover:border-border"
+          aria-label="Toggle Theme"
+        >
+          {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
+        </button>
       </nav>
 
       {/* Main Content */}
