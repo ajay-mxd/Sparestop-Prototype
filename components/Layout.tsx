@@ -55,14 +55,10 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   const navItems = getNavItems();
 
-  // Logic to determine if Back button should be shown
-  // Show on all pages except the 'Home' of the respective role
-  const isHome = location.pathname === '/' || 
-                 location.pathname === '/garage' || 
-                 location.pathname === '/retailer/dashboard';
-  
-  // Show back button on any page that isn't the main landing/home of the logged-in role
-  const showBackButton = !isHome;
+  // Show back button on all authenticated pages in the mobile header
+  // logic: always show if we are in this layout (which implies role is set)
+  // Exception: technically the root '/' doesn't use this layout return, so we are safe.
+  const showBackButton = true;
 
   const pageTitle = navItems.find(item => item.path === location.pathname)?.label || 'Sparestop';
 
@@ -70,16 +66,16 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     <div className="min-h-screen bg-background flex flex-col md:flex-row transition-colors duration-300">
       
       {/* Mobile Header (Apple Style) */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md border-b border-border pt-safe">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md border-b border-border pt-safe transition-all duration-300">
         <div className="flex items-center justify-between h-[52px] px-4">
-          {/* Left: Back Button or Empty */}
+          {/* Left: Back Button */}
           <div className="flex-1 flex items-start">
             {showBackButton && (
               <button 
                 onClick={() => navigate(-1)}
-                className="flex items-center text-primary -ml-2 px-2 py-1 active:opacity-50 transition-opacity"
+                className="flex items-center text-primary -ml-2 px-2 py-1 active:opacity-50 transition-opacity group"
               >
-                <ChevronLeft size={28} strokeWidth={2.5} />
+                <ChevronLeft size={28} strokeWidth={2.5} className="group-active:-translate-x-0.5 transition-transform" />
                 <span className="text-base font-medium leading-none mb-0.5">Back</span>
               </button>
             )}
