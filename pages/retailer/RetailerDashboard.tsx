@@ -4,9 +4,9 @@ import { IndianRupee, ShoppingCart, AlertCircle, TrendingUp, Clock, CheckCircle 
 import { Link } from 'react-router-dom';
 
 const StatCard: React.FC<{ title: string; value: string; icon: React.ElementType; color: string }> = ({ title, value, icon: Icon, color }) => (
-  <div className="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-border">
+  <div className="bg-surface p-4 md:p-6 rounded-xl shadow-sm border border-border">
     <div className="flex items-center justify-between mb-2 md:mb-4">
-      <div className={`p-2 md:p-3 rounded-lg ${color} bg-opacity-10`}>
+      <div className={`p-2 md:p-3 rounded-lg ${color} bg-opacity-20`}>
         <Icon className={`${color.replace('bg-', 'text-')} md:w-6 md:h-6`} size={20} />
       </div>
     </div>
@@ -37,15 +37,15 @@ export const RetailerDashboard: React.FC = () => {
         <StatCard title="Avg. Sale Value" value={`₹${Math.round(totalSales / (sales.length || 1))}`} icon={TrendingUp} color="bg-orange-500" />
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-border overflow-hidden">
+      <div className="bg-surface rounded-xl shadow-sm border border-border overflow-hidden">
         <div className="p-4 md:p-6 border-b border-border">
-          <h2 className="text-lg font-bold">Recent Transactions</h2>
+          <h2 className="text-lg font-bold text-textPrimary">Recent Transactions</h2>
         </div>
 
         {/* Mobile View - Cards */}
         <div className="md:hidden">
           {sales.slice(0, 5).map(sale => (
-            <div key={sale.id} className="p-4 border-b border-border last:border-0 hover:bg-gray-50">
+            <div key={sale.id} className="p-4 border-b border-border last:border-0 hover:bg-white/5">
               <div className="flex justify-between items-start mb-2">
                 <div>
                    <span className="text-xs text-textSecondary font-mono block mb-1">#{sale.id}</span>
@@ -54,7 +54,7 @@ export const RetailerDashboard: React.FC = () => {
                 </div>
                 <div className="text-right">
                    <div className="font-bold text-primary">₹{sale.amount}</div>
-                   <span className={`text-[10px] px-1.5 py-0.5 rounded-full inline-flex items-center gap-1 mt-1 ${sale.status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                   <span className={`text-[10px] px-1.5 py-0.5 rounded-full inline-flex items-center gap-1 mt-1 ${sale.status === 'paid' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
                      {sale.status === 'paid' ? <CheckCircle size={10} /> : <Clock size={10} />}
                      <span className="capitalize">{sale.status}</span>
                    </span>
@@ -67,7 +67,7 @@ export const RetailerDashboard: React.FC = () => {
         {/* Desktop View - Table */}
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-gray-50 text-xs uppercase text-textSecondary font-semibold">
+            <thead className="bg-background text-xs uppercase text-textSecondary font-semibold">
               <tr>
                 <th className="px-4 py-3">ID</th>
                 <th className="px-4 py-3">Date</th>
@@ -79,14 +79,14 @@ export const RetailerDashboard: React.FC = () => {
             </thead>
             <tbody className="divide-y divide-border">
               {sales.slice(0, 5).map(sale => (
-                <tr key={sale.id}>
-                  <td className="px-4 py-3 font-mono text-xs">{sale.id}</td>
-                  <td className="px-4 py-3 text-sm">{sale.date}</td>
-                  <td className="px-4 py-3 text-sm">{sale.customer}</td>
-                  <td className="px-4 py-3 text-sm">{sale.partName}</td>
-                  <td className="px-4 py-3 font-medium">₹{sale.amount}</td>
+                <tr key={sale.id} className="hover:bg-white/5">
+                  <td className="px-4 py-3 font-mono text-xs text-textSecondary">{sale.id}</td>
+                  <td className="px-4 py-3 text-sm text-textPrimary">{sale.date}</td>
+                  <td className="px-4 py-3 text-sm text-textPrimary">{sale.customer}</td>
+                  <td className="px-4 py-3 text-sm text-textPrimary">{sale.partName}</td>
+                  <td className="px-4 py-3 font-medium text-textPrimary">₹{sale.amount}</td>
                   <td className="px-4 py-3">
-                    <span className={`text-xs px-2 py-1 rounded-full ${sale.status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                    <span className={`text-xs px-2 py-1 rounded-full ${sale.status === 'paid' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
                       {sale.status}
                     </span>
                   </td>

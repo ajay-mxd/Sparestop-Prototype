@@ -13,15 +13,15 @@ const RoleCard: React.FC<{
 }> = ({ title, description, icon: Icon, onClick, color, buttonText }) => (
   <button 
     onClick={onClick}
-    className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all border border-transparent hover:border-blue-200 text-left w-full group relative overflow-hidden"
+    className="bg-surface p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all border border-border hover:border-primary text-left w-full group relative overflow-hidden"
   >
     <div className={`absolute top-0 right-0 p-32 opacity-5 rounded-full -mr-10 -mt-10 ${color}`}></div>
     <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 ${color} text-white shadow-md`}>
       <Icon size={28} />
     </div>
-    <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-blue-700 transition-colors">{title}</h3>
-    <p className="text-gray-500 mb-8 leading-relaxed">{description}</p>
-    <div className="flex items-center text-blue-600 font-bold group-hover:translate-x-2 transition-transform">
+    <h3 className="text-2xl font-bold text-textPrimary mb-3 group-hover:text-primary transition-colors">{title}</h3>
+    <p className="text-textSecondary mb-8 leading-relaxed">{description}</p>
+    <div className="flex items-center text-primary font-bold group-hover:translate-x-2 transition-transform">
       {buttonText} <ArrowRight size={18} className="ml-2" />
     </div>
   </button>
@@ -42,11 +42,11 @@ export const Landing: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Navbar for Landing */}
       <nav className="p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
         <div>
-          <span className="text-2xl font-bold text-slate-900">Sparestop</span>
+          <span className="text-2xl font-bold text-textPrimary">Sparestop</span>
         </div>
       </nav>
 
@@ -54,15 +54,10 @@ export const Landing: React.FC = () => {
       <div className="flex-1 flex flex-col items-center justify-center p-6 pb-20">
         <div className="max-w-5xl w-full">
           <div className="text-center mb-16 space-y-4">
-            <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight">
-              The Engine of <span className="text-blue-600">Auto Parts.</span>
-            </h1>
-            <p className="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto">
-              Connecting local retailers and garages with the largest wholesale inventory in the country.
-            </p>
+             {/* Text removed as requested */}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-[-4rem]">
             <RoleCard
               title="For Retailers"
               description="Restock your shop instantly. Access wholesale pricing, manage invoices, and track delivery to your store."
@@ -82,7 +77,7 @@ export const Landing: React.FC = () => {
           </div>
 
           <div className="mt-16 text-center">
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-textSecondary">
               © 2024 Sparestop Pvt Ltd. Demo Prototype v1.0
             </p>
           </div>

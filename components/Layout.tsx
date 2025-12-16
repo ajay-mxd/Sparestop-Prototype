@@ -53,17 +53,17 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row">
       {/* Mobile Header */}
-      <div className="md:hidden bg-primary text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-md">
+      <div className="md:hidden bg-surface border-b border-border p-4 flex justify-between items-center sticky top-0 z-50 shadow-md">
         <div className="flex items-center space-x-2">
-          <div className="font-bold text-xl">Sparestop</div>
-          <span className="text-xs bg-white/20 px-2 py-0.5 rounded capitalize">{role}</span>
+          <div className="font-bold text-xl text-primary">Sparestop</div>
+          <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded capitalize">{role}</span>
         </div>
         {/* Hamburger menu removed as per request */}
       </div>
 
       {/* Sidebar / Mobile Menu */}
       <div className={cn(
-        "bg-white border-r border-border md:w-64 fixed md:sticky md:top-0 h-full z-40 transition-transform duration-300 ease-in-out md:translate-x-0 w-64 shadow-xl md:shadow-none flex flex-col",
+        "bg-surface border-r border-border md:w-64 fixed md:sticky md:top-0 h-full z-40 transition-transform duration-300 ease-in-out md:translate-x-0 w-64 shadow-xl md:shadow-none flex flex-col",
         isMenuOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="p-6 hidden md:block">
@@ -83,8 +83,8 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                 className={cn(
                   "flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors",
                   isActive 
-                    ? "bg-blue-50 text-primary font-medium" 
-                    : "text-textSecondary hover:bg-gray-50"
+                    ? "bg-primary/10 text-primary font-medium" 
+                    : "text-textSecondary hover:bg-white/5"
                 )}
               >
                 <Icon size={20} />
@@ -102,7 +102,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         <div className="p-4 border-t border-border">
           <button 
             onClick={handleLogout}
-            className="flex items-center space-x-3 px-4 py-3 text-error w-full hover:bg-red-50 rounded-lg transition-colors"
+            className="flex items-center space-x-3 px-4 py-3 text-error w-full hover:bg-red-500/10 rounded-lg transition-colors"
           >
             <LogOut size={20} />
             <span>Switch Role</span>
@@ -111,13 +111,13 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto h-screen scroll-smooth pb-24 md:pb-8">
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto h-screen scroll-smooth pb-24 md:pb-8 bg-background">
         {children}
       </main>
 
       {/* Mobile Bottom Nav (Garage & Retailer) */}
       {(role === 'garage' || role === 'retailer') && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-border flex justify-around p-2 z-50 pb-safe">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-surface border-t border-border flex justify-around p-2 z-50 pb-safe">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             const Icon = item.icon;

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <link rel="icon" href="https://lucide.dev/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
-    <meta name="theme-color" content="#2563EB" />
+    <meta name="theme-color" content="#020617" />
     <meta
       name="description"
       content="Sparestop - Wholesale Spare Parts Platform"
@@ -16,16 +16,16 @@
         theme: {
           extend: {
             colors: {
-              primary: '#2563EB', // Blue
+              primary: '#3B82F6', // Blue 500
               secondary: '#F97316', // Orange
               success: '#10B981', // Green
               error: '#EF4444', // Red
               warning: '#F59E0B', // Amber
-              background: '#F9FAFB',
-              surface: '#FFFFFF',
-              textPrimary: '#111827',
-              textSecondary: '#6B7280',
-              border: '#E5E7EB',
+              background: '#020617', // Slate 950
+              surface: '#1E293B', // Slate 800
+              textPrimary: '#F8FAFC', // Slate 50
+              textSecondary: '#94A3B8', // Slate 400
+              border: '#334155', // Slate 700
             },
             fontFamily: {
               sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -36,8 +36,8 @@
     </script>
     <style>
       body {
-        background-color: #F9FAFB;
-        color: #111827;
+        background-color: #020617;
+        color: #F8FAFC;
       }
       /* Hide scrollbar for clean horizontal scrolling */
       .no-scrollbar::-webkit-scrollbar {
@@ -46,6 +46,15 @@
       .no-scrollbar {
         -ms-overflow-style: none;
         scrollbar-width: none;
+      }
+      /* Custom utility for inputs in dark mode */
+      input, select {
+        background-color: #0F172A; /* Slate 900 */
+        border-color: #334155;
+        color: #F8FAFC;
+      }
+      input::placeholder {
+        color: #64748B;
       }
     </style>
   <script type="importmap">

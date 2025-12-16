@@ -37,12 +37,12 @@ export const NewSale: React.FC = () => {
   const getStockStatus = (part: Part) => {
     const invItem = myInventory.find(i => i.partId === part.id);
     if (invItem && invItem.quantity > 0) {
-      return { label: 'In Store', color: 'text-green-600 bg-green-50', icon: Box };
+      return { label: 'In Store', color: 'text-green-500 bg-green-500/10', icon: Box };
     }
     if (part.warehouseStock > 0) {
-      return { label: 'Available in 5hrs', color: 'text-orange-600 bg-orange-50', icon: Truck };
+      return { label: 'Available in 5hrs', color: 'text-orange-500 bg-orange-500/10', icon: Truck };
     }
-    return { label: 'Out of Stock', color: 'text-red-600 bg-red-50', icon: null };
+    return { label: 'Out of Stock', color: 'text-red-500 bg-red-500/10', icon: null };
   };
 
   const handleVehicleSearch = () => {
@@ -105,23 +105,23 @@ export const NewSale: React.FC = () => {
       </div>
 
       {orderSuccess && (
-        <div className="bg-green-100 text-green-800 p-4 rounded-lg flex items-center shadow-sm">
+        <div className="bg-green-500/20 text-green-300 p-4 rounded-lg flex items-center shadow-sm border border-green-500/20">
           <Check size={20} className="mr-2" /> {orderSuccess}
         </div>
       )}
 
       {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-sm border border-border overflow-hidden">
+      <div className="bg-surface rounded-xl shadow-sm border border-border overflow-hidden">
         <div className="flex border-b border-border">
           <button
             onClick={() => setActiveTab('vehicle')}
-            className={`flex-1 py-4 text-center font-medium transition-colors ${activeTab === 'vehicle' ? 'bg-blue-50 text-primary border-b-2 border-primary' : 'text-textSecondary hover:bg-gray-50'}`}
+            className={`flex-1 py-4 text-center font-medium transition-colors ${activeTab === 'vehicle' ? 'bg-primary/10 text-primary border-b-2 border-primary' : 'text-textSecondary hover:bg-white/5'}`}
           >
             Vehicle-First Search
           </button>
           <button
             onClick={() => setActiveTab('part')}
-            className={`flex-1 py-4 text-center font-medium transition-colors ${activeTab === 'part' ? 'bg-blue-50 text-primary border-b-2 border-primary' : 'text-textSecondary hover:bg-gray-50'}`}
+            className={`flex-1 py-4 text-center font-medium transition-colors ${activeTab === 'part' ? 'bg-primary/10 text-primary border-b-2 border-primary' : 'text-textSecondary hover:bg-white/5'}`}
           >
             Part-First Search
           </button>
@@ -136,7 +136,7 @@ export const NewSale: React.FC = () => {
                 <div>
                   <label className="block text-xs font-medium text-textSecondary mb-1">Make</label>
                   <select 
-                    className="w-full p-3 border border-border rounded-lg bg-white focus:ring-2 focus:ring-primary outline-none"
+                    className="w-full p-3 border border-border rounded-lg bg-background focus:ring-2 focus:ring-primary outline-none"
                     value={vMake}
                     onChange={e => { setVMake(e.target.value); setVModel(''); }}
                   >
@@ -151,7 +151,7 @@ export const NewSale: React.FC = () => {
                 <div>
                   <label className="block text-xs font-medium text-textSecondary mb-1">Model</label>
                   <select 
-                    className="w-full p-3 border border-border rounded-lg bg-white focus:ring-2 focus:ring-primary outline-none"
+                    className="w-full p-3 border border-border rounded-lg bg-background focus:ring-2 focus:ring-primary outline-none"
                     value={vModel}
                     onChange={e => setVModel(e.target.value)}
                     disabled={!vMake}
@@ -167,7 +167,7 @@ export const NewSale: React.FC = () => {
                 <div>
                   <label className="block text-xs font-medium text-textSecondary mb-1">Year</label>
                   <select 
-                    className="w-full p-3 border border-border rounded-lg bg-white focus:ring-2 focus:ring-primary outline-none"
+                    className="w-full p-3 border border-border rounded-lg bg-background focus:ring-2 focus:ring-primary outline-none"
                     value={vYear}
                     onChange={e => setVYear(e.target.value)}
                   >
@@ -182,7 +182,7 @@ export const NewSale: React.FC = () => {
                 <div>
                   <label className="block text-xs font-medium text-textSecondary mb-1">Variant</label>
                   <select 
-                    className="w-full p-3 border border-border rounded-lg bg-white focus:ring-2 focus:ring-primary outline-none"
+                    className="w-full p-3 border border-border rounded-lg bg-background focus:ring-2 focus:ring-primary outline-none"
                     value={vVariant}
                     onChange={e => setVVariant(e.target.value)}
                     disabled={!vModel}
@@ -200,7 +200,7 @@ export const NewSale: React.FC = () => {
                   <input 
                     type="text"
                     placeholder="Enter 17-character VIN"
-                    className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-primary outline-none uppercase"
+                    className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-primary outline-none uppercase bg-background"
                     maxLength={17}
                     value={vVin}
                     onChange={e => setVVin(e.target.value)}
@@ -211,7 +211,7 @@ export const NewSale: React.FC = () => {
               <button
                 onClick={handleVehicleSearch}
                 disabled={!vModel || isProcessing}
-                className="w-full md:w-auto px-8 bg-primary text-white p-3 rounded-lg font-bold hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center justify-center"
+                className="w-full md:w-auto px-8 bg-primary text-white p-3 rounded-lg font-bold hover:bg-blue-600 disabled:opacity-50 transition-colors flex items-center justify-center"
               >
                 {isProcessing ? 'Checking Compatibility...' : <><Search size={20} className="mr-2" /> Find Compatible Parts</>}
               </button>
@@ -222,19 +222,19 @@ export const NewSale: React.FC = () => {
                     const status = getStockStatus(part);
                     const StatusIcon = status.icon;
                     return (
-                      <div key={part.id} className="border border-border rounded-lg p-4 hover:shadow-md transition-shadow bg-white flex flex-col h-full">
+                      <div key={part.id} className="border border-border rounded-lg p-4 hover:shadow-md transition-shadow bg-surface flex flex-col h-full">
                         <div className="flex gap-4 mb-3">
-                           <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center text-gray-300">
+                           <div className="w-16 h-16 bg-background rounded-lg flex items-center justify-center text-textSecondary">
                              <Box size={24} />
                            </div>
                            <div>
                              <h3 className="font-bold text-textPrimary leading-tight">{part.name}</h3>
                              <p className="text-xs text-textSecondary mt-1">{part.sku}</p>
-                             <span className="text-xs text-textSecondary bg-gray-100 px-2 py-0.5 rounded mt-1 inline-block">{part.category}</span>
+                             <span className="text-xs text-textSecondary bg-background px-2 py-0.5 rounded mt-1 inline-block">{part.category}</span>
                            </div>
                         </div>
                         
-                        <div className="mt-auto pt-3 border-t border-dashed border-gray-100 flex items-center justify-between">
+                        <div className="mt-auto pt-3 border-t border-dashed border-border flex items-center justify-between">
                           <div>
                             <span className="block font-bold text-lg text-primary">₹{part.price}</span>
                             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 w-fit ${status.color}`}>
@@ -243,7 +243,7 @@ export const NewSale: React.FC = () => {
                           </div>
                           <button 
                             onClick={() => addToCart(part)}
-                            className="p-2 bg-primary text-white rounded-lg hover:bg-blue-700 shadow-sm flex items-center gap-1"
+                            className="p-2 bg-primary text-white rounded-lg hover:bg-blue-600 shadow-sm flex items-center gap-1"
                           >
                             <Plus size={20} />
                             <span className="md:hidden text-sm font-bold pr-1">Add</span>
@@ -269,7 +269,7 @@ export const NewSale: React.FC = () => {
                       <button 
                         key={cat.id} 
                         onClick={() => { setSelectedCat(cat.name); setStep('form'); }}
-                        className="flex flex-col items-center p-2 md:p-6 border border-border rounded-xl hover:border-primary hover:bg-blue-50 transition-all aspect-square md:aspect-auto justify-center"
+                        className="flex flex-col items-center p-2 md:p-6 border border-border rounded-xl hover:border-primary hover:bg-primary/10 transition-all aspect-square md:aspect-auto justify-center"
                       >
                         <IconComponent size={24} className="text-primary mb-2 md:mb-3 md:w-8 md:h-8" />
                         <span className="text-[10px] md:text-base font-bold text-textPrimary text-center leading-tight">{cat.name}</span>
@@ -287,10 +287,10 @@ export const NewSale: React.FC = () => {
                       <span className="font-bold text-primary">{selectedCat}</span>
                    </div>
 
-                   <div className="bg-blue-50 p-6 rounded-xl border border-blue-100 mb-6">
+                   <div className="bg-primary/10 p-6 rounded-xl border border-primary/20 mb-6">
                       <div className="flex items-center gap-3 mb-4">
                         <Wrench className="text-primary" />
-                        <h3 className="font-bold text-lg">Smart Compatibility Check</h3>
+                        <h3 className="font-bold text-lg text-textPrimary">Smart Compatibility Check</h3>
                       </div>
                       <p className="text-sm text-textSecondary mb-6">
                         To ensure the {selectedCat} fits, please provide vehicle details below.
@@ -298,7 +298,7 @@ export const NewSale: React.FC = () => {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <select 
-                          className="w-full p-3 border border-border rounded-lg bg-white"
+                          className="w-full p-3 border border-border rounded-lg bg-surface"
                           value={pMake}
                           onChange={e => { setPMake(e.target.value); setPModel(''); }}
                         >
@@ -309,7 +309,7 @@ export const NewSale: React.FC = () => {
                         </select>
                         
                         <select 
-                          className="w-full p-3 border border-border rounded-lg bg-white"
+                          className="w-full p-3 border border-border rounded-lg bg-surface"
                           value={pModel}
                           onChange={e => setPModel(e.target.value)}
                           disabled={!pMake}
@@ -321,7 +321,7 @@ export const NewSale: React.FC = () => {
                         </select>
 
                         <select 
-                          className="w-full p-3 border border-border rounded-lg bg-white"
+                          className="w-full p-3 border border-border rounded-lg bg-surface"
                           value={pYear}
                           onChange={e => setPYear(e.target.value)}
                         >
@@ -335,7 +335,7 @@ export const NewSale: React.FC = () => {
                         <input 
                            type="text"
                            placeholder="VIN (Optional for simple parts)"
-                           className="w-full p-3 border border-border rounded-lg uppercase"
+                           className="w-full p-3 border border-border rounded-lg uppercase bg-surface"
                            value={pVin}
                            onChange={e => setPVin(e.target.value)}
                         />
@@ -344,7 +344,7 @@ export const NewSale: React.FC = () => {
                       <button
                         onClick={handlePartFirstSearch}
                         disabled={!pModel}
-                        className="mt-6 w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-blue-700 disabled:opacity-50"
+                        className="mt-6 w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-blue-600 disabled:opacity-50"
                       >
                         Check Compatibility & Show Parts
                       </button>
@@ -358,7 +358,7 @@ export const NewSale: React.FC = () => {
                      <button onClick={() => setStep('form')} className="text-sm text-textSecondary hover:text-primary flex items-center">
                        <ArrowRight className="rotate-180 mr-1" size={14} /> Back to filters
                      </button>
-                     <span className="text-sm font-bold bg-green-100 text-green-800 px-3 py-1 rounded-full">
+                     <span className="text-sm font-bold bg-green-500/10 text-green-500 px-3 py-1 rounded-full border border-green-500/20">
                        Compatible with {pMake} {pModel}
                      </span>
                    </div>
@@ -372,19 +372,19 @@ export const NewSale: React.FC = () => {
                       const status = getStockStatus(part);
                       const StatusIcon = status.icon;
                       return (
-                        <div key={part.id} className="border border-border rounded-lg p-4 hover:shadow-md transition-shadow bg-white flex flex-col h-full">
+                        <div key={part.id} className="border border-border rounded-lg p-4 hover:shadow-md transition-shadow bg-surface flex flex-col h-full">
                           <div className="flex gap-4 mb-3">
-                            <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center text-gray-300">
+                            <div className="w-16 h-16 bg-background rounded-lg flex items-center justify-center text-textSecondary">
                               <Box size={24} />
                             </div>
                             <div>
                               <h3 className="font-bold text-textPrimary leading-tight">{part.name}</h3>
                               <p className="text-xs text-textSecondary mt-1">{part.sku}</p>
-                              <span className="text-xs text-textSecondary bg-gray-100 px-2 py-0.5 rounded mt-1 inline-block">{part.category}</span>
+                              <span className="text-xs text-textSecondary bg-background px-2 py-0.5 rounded mt-1 inline-block">{part.category}</span>
                             </div>
                           </div>
                           
-                          <div className="mt-auto pt-3 border-t border-dashed border-gray-100 flex items-center justify-between">
+                          <div className="mt-auto pt-3 border-t border-dashed border-border flex items-center justify-between">
                             <div>
                               <span className="block font-bold text-lg text-primary">₹{part.price}</span>
                               <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 w-fit ${status.color}`}>
@@ -393,7 +393,7 @@ export const NewSale: React.FC = () => {
                             </div>
                             <button 
                               onClick={() => addToCart(part)}
-                              className="p-2 bg-primary text-white rounded-lg hover:bg-blue-700 shadow-sm flex items-center gap-1"
+                              className="p-2 bg-primary text-white rounded-lg hover:bg-blue-600 shadow-sm flex items-center gap-1"
                             >
                               <Plus size={20} />
                               <span className="md:hidden text-sm font-bold pr-1">Add</span>
@@ -412,13 +412,13 @@ export const NewSale: React.FC = () => {
 
       {/* Cart Drawer / Bottom Bar */}
       {cart.length > 0 && (
-        <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-white border-t border-border shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-30 pb-safe transition-all duration-300">
+        <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-surface border-t border-border shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.5)] z-30 pb-safe transition-all duration-300">
           <div className="max-w-4xl mx-auto p-4">
              {/* Mobile Toggle Handle */}
              <div className="md:hidden flex justify-center -mt-8 pb-4">
                <button 
                  onClick={() => setIsCartExpanded(!isCartExpanded)}
-                 className="bg-white border border-border px-4 py-1 rounded-t-lg shadow-sm text-primary flex items-center gap-1 text-xs font-bold"
+                 className="bg-surface border border-border px-4 py-1 rounded-t-lg shadow-sm text-primary flex items-center gap-1 text-xs font-bold"
                >
                  {isCartExpanded ? <ChevronDown size={14}/> : <ChevronUp size={14}/>} 
                  {isCartExpanded ? 'Hide Items' : `View ${cart.length} Items`}
@@ -428,14 +428,14 @@ export const NewSale: React.FC = () => {
              {/* Cart Items Summary */}
              <div className={`w-full overflow-y-auto transition-all duration-300 ${isCartExpanded ? 'max-h-64 mb-4' : 'max-h-0 md:max-h-32 md:mb-0'}`}>
                 {cart.map(item => (
-                  <div key={item.part.id} className="flex justify-between items-center text-sm py-2 border-b border-gray-100 last:border-0">
+                  <div key={item.part.id} className="flex justify-between items-center text-sm py-2 border-b border-border last:border-0">
                     <div className="flex flex-col md:flex-row md:items-center">
-                       <span className="truncate w-full md:w-40 font-medium">{item.part.name}</span>
+                       <span className="truncate w-full md:w-40 font-medium text-textPrimary">{item.part.name}</span>
                        <span className="text-xs text-textSecondary md:hidden">{item.part.sku}</span>
                     </div>
                     <div className="flex items-center gap-4">
-                      <span className="mx-2 text-gray-500 text-xs">x{item.quantity}</span>
-                      <span className="font-bold">₹{item.part.price * item.quantity}</span>
+                      <span className="mx-2 text-textSecondary text-xs">x{item.quantity}</span>
+                      <span className="font-bold text-textPrimary">₹{item.part.price * item.quantity}</span>
                       <button onClick={() => removeFromCart(item.part.id)} className="ml-2 text-red-400 hover:text-red-600"><Trash2 size={14}/></button>
                     </div>
                   </div>
@@ -450,7 +450,7 @@ export const NewSale: React.FC = () => {
                <button
                  onClick={handleCompleteSale}
                  disabled={isProcessing}
-                 className="flex-1 md:flex-none bg-green-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-700 disabled:opacity-50 shadow-lg flex items-center justify-center min-w-[140px]"
+                 className="flex-1 md:flex-none bg-success text-white px-6 py-3 rounded-xl font-bold hover:bg-green-700 disabled:opacity-50 shadow-lg flex items-center justify-center min-w-[140px]"
                >
                  {isProcessing ? '...' : 'Complete Sale'}
                </button>
