@@ -17,12 +17,12 @@ export const GarageCart: React.FC = () => {
   if (cart.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] text-center p-6">
-        <div className="bg-gray-100 p-6 rounded-full mb-4">
-          <Trash2 size={32} className="text-gray-400" />
+        <div className="bg-surface p-6 rounded-full mb-4 border border-border">
+          <Trash2 size={32} className="text-textSecondary" />
         </div>
         <h2 className="text-xl font-bold text-textPrimary mb-2">Your Cart is Empty</h2>
         <p className="text-textSecondary mb-6">Find parts for your next repair job.</p>
-        <Link to="/garage/search" className="bg-primary text-white px-6 py-3 rounded-xl font-bold">
+        <Link to="/garage/search" className="bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-600">
           Browse Parts
         </Link>
       </div>
@@ -32,16 +32,16 @@ export const GarageCart: React.FC = () => {
   if (step === 2) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] text-center p-6">
-        <div className="bg-green-100 p-6 rounded-full mb-4 animate-bounce">
-          <MapPin size={32} className="text-green-600" />
+        <div className="bg-green-500/20 p-6 rounded-full mb-4 animate-bounce">
+          <MapPin size={32} className="text-green-500" />
         </div>
         <h2 className="text-2xl font-bold text-textPrimary mb-2">Reservation Confirmed!</h2>
         <p className="text-textSecondary mb-6">Your parts are reserved at <strong>{inventory.find(s => s.id === selectedStore)?.name}</strong>.</p>
-        <div className="bg-white p-4 rounded-xl border border-border w-full max-w-sm mb-6">
+        <div className="bg-surface p-4 rounded-xl border border-border w-full max-w-sm mb-6">
            <div className="text-xs text-textSecondary uppercase mb-1">Pickup Code</div>
            <div className="text-3xl font-mono font-bold tracking-widest text-primary">8829</div>
         </div>
-        <Link to="/garage" className="text-primary font-medium">Return Home</Link>
+        <Link to="/garage" className="text-primary font-medium hover:underline">Return Home</Link>
       </div>
     );
   }
@@ -52,18 +52,18 @@ export const GarageCart: React.FC = () => {
       
       <div className="space-y-4">
         {cart.map(item => (
-          <div key={item.part.id} className="bg-white p-4 rounded-xl border border-border flex gap-4">
-            <div className="w-16 h-16 bg-gray-100 rounded-lg flex-shrink-0"></div>
+          <div key={item.part.id} className="bg-surface p-4 rounded-xl border border-border flex gap-4">
+            <div className="w-16 h-16 bg-background rounded-lg flex-shrink-0"></div>
             <div className="flex-1">
               <div className="flex justify-between items-start">
                 <h3 className="font-bold text-textPrimary text-sm">{item.part.name}</h3>
-                <button onClick={() => removeFromCart(item.part.id)} className="text-gray-400 hover:text-red-500">
+                <button onClick={() => removeFromCart(item.part.id)} className="text-textSecondary hover:text-error transition-colors">
                   <Trash2 size={16} />
                 </button>
               </div>
               <p className="text-xs text-textSecondary mb-2">{item.part.sku}</p>
               <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">Qty: {item.quantity}</span>
+                <span className="text-sm font-medium text-textPrimary">Qty: {item.quantity}</span>
                 <span className="font-bold text-primary">₹{item.part.price * item.quantity}</span>
               </div>
             </div>
@@ -72,17 +72,17 @@ export const GarageCart: React.FC = () => {
       </div>
 
       <div className="pt-4 border-t border-border">
-        <h3 className="font-bold text-lg mb-3">Select Pickup Store</h3>
+        <h3 className="font-bold text-lg mb-3 text-textPrimary">Select Pickup Store</h3>
         <div className="space-y-3">
           {nearbyStores.map(store => (
             <div 
               key={store.id} 
               onClick={() => setSelectedStore(store.id)}
-              className={`p-4 rounded-xl border cursor-pointer transition-all ${selectedStore === store.id ? 'border-primary bg-blue-50 ring-1 ring-primary' : 'border-border bg-white'}`}
+              className={`p-4 rounded-xl border cursor-pointer transition-all ${selectedStore === store.id ? 'border-primary bg-primary/10 ring-1 ring-primary' : 'border-border bg-surface hover:bg-background'}`}
             >
               <div className="flex justify-between items-center">
-                <span className="font-bold text-sm">{store.name}</span>
-                <span className="text-xs bg-white border border-gray-200 px-2 py-0.5 rounded">{store.distance} km</span>
+                <span className="font-bold text-sm text-textPrimary">{store.name}</span>
+                <span className="text-xs bg-background border border-border px-2 py-0.5 rounded text-textSecondary">{store.distance} km</span>
               </div>
               <p className="text-xs text-textSecondary mt-1">{store.address}</p>
             </div>
@@ -90,16 +90,16 @@ export const GarageCart: React.FC = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-white border-t border-border p-4 shadow-lg z-30">
+      <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-surface border-t border-border p-4 shadow-lg z-30">
         <div className="max-w-2xl mx-auto flex justify-between items-center gap-4">
           <div>
             <p className="text-xs text-textSecondary">Total Payable</p>
-            <p className="text-xl font-bold">₹{total}</p>
+            <p className="text-xl font-bold text-textPrimary">₹{total}</p>
           </div>
           <button
             onClick={() => setStep(2)}
             disabled={!selectedStore}
-            className="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+            className="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
           >
             Reserve Now <ArrowRight size={18} className="ml-2" />
           </button>

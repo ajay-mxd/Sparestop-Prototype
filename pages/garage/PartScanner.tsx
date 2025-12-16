@@ -52,35 +52,35 @@ export const PartScanner: React.FC = () => {
           `}</style>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-center p-6 bg-gray-900">
-          <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-sm">
+        <div className="flex-1 flex flex-col items-center justify-center p-6 bg-background">
+          <div className="bg-surface text-textPrimary p-6 rounded-2xl w-full max-w-sm border border-border shadow-lg">
             <div className="flex justify-center mb-4">
-               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                 <Scan size={32} className="text-green-600" />
+               <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center">
+                 <Scan size={32} className="text-green-500" />
                </div>
             </div>
             <h2 className="text-xl font-bold text-center mb-1">Part Identified!</h2>
-            <p className="text-center text-gray-500 text-sm mb-6">Barcode: {scannedPart.sku}</p>
+            <p className="text-center text-textSecondary text-sm mb-6">Barcode: {scannedPart.sku}</p>
             
-            <div className="bg-gray-50 p-4 rounded-xl mb-6">
+            <div className="bg-background p-4 rounded-xl mb-6 border border-border">
               <h3 className="font-bold text-lg">{scannedPart.name}</h3>
-              <p className="text-sm text-gray-600 mb-2">{scannedPart.category}</p>
+              <p className="text-sm text-textSecondary mb-2">{scannedPart.category}</p>
               <div className="flex justify-between items-center mt-2">
                 <span className="font-bold text-primary text-xl">₹{scannedPart.price}</span>
-                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">In Stock</span>
+                <span className="text-xs bg-green-500/20 text-green-500 px-2 py-1 rounded">In Stock</span>
               </div>
             </div>
 
             <div className="space-y-3">
               <button 
                 onClick={() => { addToCart(scannedPart); navigate('/garage/cart'); }}
-                className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-blue-600"
+                className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-blue-600 transition-colors"
               >
                 Add to Cart
               </button>
               <button 
                 onClick={handleRescan}
-                className="w-full border border-gray-200 py-3 rounded-xl font-medium hover:bg-gray-50"
+                className="w-full border border-border py-3 rounded-xl font-medium hover:bg-background transition-colors text-textPrimary"
               >
                 Scan Another
               </button>
@@ -92,9 +92,9 @@ export const PartScanner: React.FC = () => {
       {/* Overlay Controls */}
       <button 
         onClick={() => navigate('/garage')}
-        className="absolute top-4 right-4 bg-black/40 p-2 rounded-full backdrop-blur-sm"
+        className="absolute top-4 right-4 bg-black/40 p-2 rounded-full backdrop-blur-sm hover:bg-black/60 transition-colors"
       >
-        <X size={24} />
+        <X size={24} className="text-white" />
       </button>
     </div>
   );
