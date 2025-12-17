@@ -12,14 +12,30 @@ function cn(...inputs: (string | undefined | null | false)[]) {
   return twMerge(clsx(inputs));
 }
 
-const Logo: React.FC<{ size?: number }> = ({ size = 32 }) => (
-  <div 
-    className="flex items-center justify-center bg-primary text-white rounded-lg font-black shrink-0"
-    style={{ width: size, height: size, fontSize: size * 0.7 }}
-  >
-    S
-  </div>
-);
+const Logo: React.FC<{ size?: number }> = ({ size = 32 }) => {
+  const [error, setError] = useState(false);
+
+  if (error) {
+    return (
+      <div 
+        className="flex items-center justify-center bg-primary text-white rounded-lg font-black shrink-0"
+        style={{ width: size, height: size, fontSize: size * 0.7 }}
+      >
+        S
+      </div>
+    );
+  }
+
+  return (
+    <img 
+      src="./logo.png" 
+      alt="Sparestop Logo" 
+      className="shrink-0 object-contain rounded-lg"
+      style={{ width: size, height: size }}
+      onError={() => setError(true)}
+    />
+  );
+};
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { role, setRole, cart } = useApp();
@@ -76,7 +92,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       {/* Mobile Header (Apple Style) */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md border-b border-border pt-safe transition-all duration-300">
         <div className="flex items-center justify-between h-[52px] px-4">
-          {/* Left: Switch Role Button (Replaces Home/Back) */}
+          {/* Left: Switch Role Button */}
           <div className="flex-1 flex items-start">
             <button 
               onClick={handleLogout}
@@ -90,8 +106,8 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
           {/* Center: Title/Logo */}
           <div className="flex-[2] flex justify-center items-center gap-2">
-             <Logo size={24} />
-             <span className="font-semibold text-lg text-textPrimary truncate">
+             <Logo size={28} />
+             <span className="font-semibold text-lg text-textPrimary truncate brand-font">
                {isDashboard ? 'Sparestop' : pageTitle}
              </span>
           </div>
@@ -111,9 +127,9 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         isMenuOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="p-6 hidden md:flex items-center gap-3">
-          <Logo size={36} />
+          <Logo size={40} />
           <div>
-            <h1 className="text-xl font-bold text-textPrimary">Sparestop</h1>
+            <h1 className="text-xl font-bold text-textPrimary brand-font">Sparestop</h1>
             <p className="text-[10px] text-textSecondary uppercase tracking-widest font-bold mt-0.5">{role} Portal</p>
           </div>
         </div>
