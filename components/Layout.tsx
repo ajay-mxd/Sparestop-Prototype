@@ -20,7 +20,6 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   const { role, setRole, cart } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Scroll to top on route change
   useEffect(() => {
@@ -104,8 +103,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
       {/* Sidebar / Desktop Menu */}
       <div className={cn(
-        "bg-surface border-r border-border md:w-64 fixed md:sticky md:top-0 h-full z-40 transition-transform duration-300 ease-in-out md:translate-x-0 w-64 shadow-xl md:shadow-none flex flex-col",
-        isMenuOpen ? "translate-x-0" : "-translate-x-full"
+        "bg-surface border-r border-border md:w-64 fixed md:sticky md:top-0 h-full z-40 transition-transform duration-300 ease-in-out md:translate-x-0 w-64 shadow-xl md:shadow-none flex flex-col"
       )}>
         <div className="p-6 hidden md:flex flex-col items-start gap-1">
           <BrandLogo className="text-3xl leading-none" />
@@ -120,7 +118,6 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
               <Link
                 key={item.path}
                 to={item.path}
-                onClick={() => setIsMenuOpen(false)}
                 className={cn(
                   "flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors",
                   isActive 

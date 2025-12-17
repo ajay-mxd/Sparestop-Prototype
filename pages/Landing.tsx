@@ -2,16 +2,16 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { Users, Wrench, ArrowRight, Sun, Moon } from 'lucide-react';
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+function cn(...inputs: (string | undefined | null | false)[]) {
+  return twMerge(clsx(inputs));
+}
 
 const BrandLogo: React.FC<{ className?: string }> = ({ className }) => (
   <span className={cn("font-sifonn text-primary", className)}>Sparestop</span>
 );
-
-import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-function cn(...inputs: (string | undefined | null | false)[]) {
-  return twMerge(clsx(inputs));
-}
 
 const RoleCard: React.FC<{ 
   title: string; 
@@ -43,7 +43,6 @@ export const Landing: React.FC = () => {
 
   const handleRoleSelect = (role: 'retailer' | 'garage') => {
     setRole(role);
-    // Explicitly navigate to new-sale for retailer
     if (role === 'retailer') {
       navigate('/retailer/new-sale');
     } else {
@@ -72,13 +71,7 @@ export const Landing: React.FC = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col items-center justify-center p-6 pb-20">
         <div className="max-w-5xl w-full">
-          <div className="text-center mb-16 space-y-4">
-             <h1 className="text-4xl md:text-6xl font-black text-textPrimary tracking-tight">
-               The Future of Spare Parts.
-             </h1>
-             <p className="text-textSecondary text-lg max-w-2xl mx-auto">Connecting wholesale supply chains with retail efficiency and mechanic precision.</p>
-          </div>
-
+          {/* Text content removed per request */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <RoleCard
               title="For Retailers"
