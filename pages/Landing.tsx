@@ -3,14 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { Users, Wrench, ArrowRight, Sun, Moon } from 'lucide-react';
 
-const Logo: React.FC<{ size?: number }> = ({ size = 40 }) => (
-  <div 
-    className="flex items-center justify-center bg-primary text-white rounded-xl font-black shrink-0 shadow-lg"
-    style={{ width: size, height: size, fontSize: size * 0.7 }}
-  >
-    S
-  </div>
+const BrandLogo: React.FC<{ className?: string }> = ({ className }) => (
+  <span className={cn("font-sifonn text-primary", className)}>Sparestop</span>
 );
+
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+function cn(...inputs: (string | undefined | null | false)[]) {
+  return twMerge(clsx(inputs));
+}
 
 const RoleCard: React.FC<{ 
   title: string; 
@@ -55,8 +56,7 @@ export const Landing: React.FC = () => {
       {/* Navbar for Landing */}
       <nav className="p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
         <div className="flex items-center gap-3">
-          <Logo size={42} />
-          <span className="text-2xl font-bold text-textPrimary">Sparestop</span>
+          <BrandLogo className="text-3xl" />
         </div>
         
         {/* Theme Toggle */}
@@ -73,7 +73,9 @@ export const Landing: React.FC = () => {
       <div className="flex-1 flex flex-col items-center justify-center p-6 pb-20">
         <div className="max-w-5xl w-full">
           <div className="text-center mb-16 space-y-4">
-             <h1 className="text-4xl md:text-5xl font-black text-textPrimary tracking-tight">The Future of Spare Parts.</h1>
+             <h1 className="text-4xl md:text-6xl font-black text-textPrimary tracking-tight flex flex-col md:flex-row items-center justify-center gap-2">
+               The Future of <BrandLogo className="text-5xl md:text-7xl block md:inline" />.
+             </h1>
              <p className="text-textSecondary text-lg max-w-2xl mx-auto">Connecting wholesale supply chains with retail efficiency and mechanic precision.</p>
           </div>
 
@@ -98,7 +100,7 @@ export const Landing: React.FC = () => {
 
           <div className="mt-16 text-center">
             <p className="text-xs text-textSecondary">
-              © 2024 Sparestop Pvt Ltd. Demo Prototype v1.2
+              © 2024 <span className="font-sifonn">Sparestop</span> Pvt Ltd. Demo Prototype v1.2
             </p>
           </div>
         </div>

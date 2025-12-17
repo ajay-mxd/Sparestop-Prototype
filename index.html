@@ -17,12 +17,11 @@
         theme: {
           extend: {
             colors: {
-              primary: '#3B82F6', // Blue 500
-              secondary: '#F97316', // Orange
-              success: '#10B981', // Green
-              error: '#EF4444', // Red
-              warning: '#F59E0B', // Amber
-              // Using CSS variables with rgb values for opacity support
+              primary: '#3B82F6',
+              secondary: '#F97316',
+              success: '#10B981',
+              error: '#EF4444',
+              warning: '#F59E0B',
               background: 'rgb(var(--color-background) / <alpha-value>)',
               surface: 'rgb(var(--color-surface) / <alpha-value>)',
               textPrimary: 'rgb(var(--color-text-primary) / <alpha-value>)',
@@ -37,24 +36,34 @@
       }
     </script>
     <style>
+      @font-face {
+        font-family: 'Sifonn';
+        src: url('/Sifonn.otf') format('opentype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      .font-sifonn {
+        font-family: 'Sifonn', sans-serif;
+      }
+
       :root {
-        /* Light Mode (Slate 50 background, White surface) */
-        --color-background: 248 250 252; /* #F8FAFC */
-        --color-surface: 255 255 255;     /* #FFFFFF */
-        --color-text-primary: 15 23 42;   /* #0F172A (Slate 900) */
-        --color-text-secondary: 100 116 139; /* #64748B (Slate 500) */
-        --color-border: 226 232 240;      /* #E2E8F0 (Slate 200) */
+        --color-background: 248 250 252;
+        --color-surface: 255 255 255;
+        --color-text-primary: 15 23 42;
+        --color-text-secondary: 100 116 139;
+        --color-border: 226 232 240;
         --safe-area-top: env(safe-area-inset-top, 0px);
         --safe-area-bottom: env(safe-area-inset-bottom, 0px);
       }
       
       .dark {
-        /* Dark Mode (Slate 950 background, Slate 800 surface) */
-        --color-background: 2 6 23;       /* #020617 */
-        --color-surface: 30 41 59;        /* #1E293B */
-        --color-text-primary: 248 250 252; /* #F8FAFC (Slate 50) */
-        --color-text-secondary: 148 163 184; /* #94A3B8 (Slate 400) */
-        --color-border: 51 65 85;         /* #334155 (Slate 700) */
+        --color-background: 2 6 23;
+        --color-surface: 30 41 59;
+        --color-text-primary: 248 250 252;
+        --color-text-secondary: 148 163 184;
+        --color-border: 51 65 85;
       }
 
       body {
@@ -63,7 +72,6 @@
         transition: background-color 0.3s ease, color 0.3s ease;
       }
 
-      /* Hide scrollbar for clean horizontal scrolling */
       .no-scrollbar::-webkit-scrollbar {
         display: none;
       }
@@ -71,7 +79,6 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
-      /* Custom utility for inputs */
       input, select {
         background-color: rgb(var(--color-surface));
         border-color: rgb(var(--color-border));
@@ -81,7 +88,6 @@
         color: rgb(var(--color-text-secondary));
       }
       
-      /* Safe area padding utilities */
       .pt-safe { padding-top: var(--safe-area-top); }
       .pb-safe { padding-bottom: var(--safe-area-bottom); }
     </style>

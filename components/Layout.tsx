@@ -12,13 +12,8 @@ function cn(...inputs: (string | undefined | null | false)[]) {
   return twMerge(clsx(inputs));
 }
 
-const Logo: React.FC<{ size?: number }> = ({ size = 32 }) => (
-  <div 
-    className="flex items-center justify-center bg-primary text-white rounded-lg font-black shrink-0"
-    style={{ width: size, height: size, fontSize: size * 0.7 }}
-  >
-    S
-  </div>
+const BrandLogo: React.FC<{ className?: string }> = ({ className }) => (
+  <span className={cn("font-sifonn text-primary", className)}>Sparestop</span>
 );
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -90,10 +85,12 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
           {/* Center: Title/Logo */}
           <div className="flex-[2] flex justify-center items-center gap-2">
-             <Logo size={24} />
-             <span className="font-semibold text-lg text-textPrimary truncate">
-               {isDashboard ? 'Sparestop' : pageTitle}
-             </span>
+             <BrandLogo className="text-xl" />
+             {!isDashboard && (
+               <span className="font-semibold text-lg text-textPrimary truncate border-l border-border pl-2 ml-1">
+                 {pageTitle}
+               </span>
+             )}
           </div>
 
           {/* Right: Empty */}
@@ -110,12 +107,9 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         "bg-surface border-r border-border md:w-64 fixed md:sticky md:top-0 h-full z-40 transition-transform duration-300 ease-in-out md:translate-x-0 w-64 shadow-xl md:shadow-none flex flex-col",
         isMenuOpen ? "translate-x-0" : "-translate-x-full"
       )}>
-        <div className="p-6 hidden md:flex items-center gap-3">
-          <Logo size={36} />
-          <div>
-            <h1 className="text-xl font-bold text-textPrimary">Sparestop</h1>
-            <p className="text-[10px] text-textSecondary uppercase tracking-widest font-bold mt-0.5">{role} Portal</p>
-          </div>
+        <div className="p-6 hidden md:flex flex-col items-start gap-1">
+          <BrandLogo className="text-3xl leading-none" />
+          <p className="text-[10px] text-textSecondary uppercase tracking-widest font-bold mt-0.5">{role} Portal</p>
         </div>
 
         <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
