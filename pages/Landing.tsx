@@ -3,6 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { Users, Wrench, ArrowRight, Sun, Moon } from 'lucide-react';
 
+const Logo: React.FC<{ size?: number }> = ({ size = 40 }) => (
+  <div 
+    className="flex items-center justify-center bg-primary text-white rounded-xl font-black shrink-0 shadow-lg"
+    style={{ width: size, height: size, fontSize: size * 0.7 }}
+  >
+    S
+  </div>
+);
+
 const RoleCard: React.FC<{ 
   title: string; 
   description: string; 
@@ -46,7 +55,8 @@ export const Landing: React.FC = () => {
       {/* Navbar for Landing */}
       <nav className="p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
         <div className="flex items-center gap-3">
-          <span className="text-4xl font-bold text-primary brand-font">Sparestop</span>
+          <Logo size={42} />
+          <span className="text-2xl font-bold text-textPrimary">Sparestop</span>
         </div>
         
         {/* Theme Toggle */}
@@ -63,8 +73,8 @@ export const Landing: React.FC = () => {
       <div className="flex-1 flex flex-col items-center justify-center p-6 pb-20">
         <div className="max-w-5xl w-full">
           <div className="text-center mb-16 space-y-4">
-             <h1 className="text-5xl md:text-7xl font-bold text-textPrimary tracking-tight brand-font">Sparestop</h1>
-             <p className="text-textSecondary text-xl max-w-2xl mx-auto font-medium">Connecting wholesale supply chains with retail efficiency and mechanic precision.</p>
+             <h1 className="text-4xl md:text-5xl font-black text-textPrimary tracking-tight">The Future of Spare Parts.</h1>
+             <p className="text-textSecondary text-lg max-w-2xl mx-auto">Connecting wholesale supply chains with retail efficiency and mechanic precision.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">

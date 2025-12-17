@@ -12,6 +12,15 @@ function cn(...inputs: (string | undefined | null | false)[]) {
   return twMerge(clsx(inputs));
 }
 
+const Logo: React.FC<{ size?: number }> = ({ size = 32 }) => (
+  <div 
+    className="flex items-center justify-center bg-primary text-white rounded-lg font-black shrink-0"
+    style={{ width: size, height: size, fontSize: size * 0.7 }}
+  >
+    S
+  </div>
+);
+
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { role, setRole, cart } = useApp();
   const navigate = useNavigate();
@@ -67,7 +76,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       {/* Mobile Header (Apple Style) */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md border-b border-border pt-safe transition-all duration-300">
         <div className="flex items-center justify-between h-[52px] px-4">
-          {/* Left: Switch Role Button */}
+          {/* Left: Switch Role Button (Replaces Home/Back) */}
           <div className="flex-1 flex items-start">
             <button 
               onClick={handleLogout}
@@ -79,9 +88,10 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
             </button>
           </div>
 
-          {/* Center: Title */}
+          {/* Center: Title/Logo */}
           <div className="flex-[2] flex justify-center items-center gap-2">
-             <span className="font-bold text-2xl text-primary truncate brand-font">
+             <Logo size={24} />
+             <span className="font-semibold text-lg text-textPrimary truncate">
                {isDashboard ? 'Sparestop' : pageTitle}
              </span>
           </div>
@@ -100,9 +110,12 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         "bg-surface border-r border-border md:w-64 fixed md:sticky md:top-0 h-full z-40 transition-transform duration-300 ease-in-out md:translate-x-0 w-64 shadow-xl md:shadow-none flex flex-col",
         isMenuOpen ? "translate-x-0" : "-translate-x-full"
       )}>
-        <div className="p-6 hidden md:flex flex-col items-start gap-1">
-          <h1 className="text-3xl font-bold text-primary brand-font leading-none">Sparestop</h1>
-          <p className="text-[10px] text-textSecondary uppercase tracking-widest font-bold">{role} Portal</p>
+        <div className="p-6 hidden md:flex items-center gap-3">
+          <Logo size={36} />
+          <div>
+            <h1 className="text-xl font-bold text-textPrimary">Sparestop</h1>
+            <p className="text-[10px] text-textSecondary uppercase tracking-widest font-bold mt-0.5">{role} Portal</p>
+          </div>
         </div>
 
         <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
