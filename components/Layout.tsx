@@ -67,50 +67,47 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row transition-colors duration-300">
       
-      {/* Mobile Header (Apple Style) */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md border-b border-border pt-safe transition-all duration-300">
-        <div className="flex items-center justify-between h-[52px] px-4">
-          {/* Left: Switch Role Button */}
-          <div className="flex-1 flex items-start">
+      {/* Mobile Header */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl border-b border-border pt-safe shadow-sm">
+        <div className="flex items-center justify-between h-[56px] px-4">
+          <div className="flex-1">
             <button 
               onClick={handleLogout}
-              className="flex items-center text-textSecondary -ml-2 px-2 py-1 active:opacity-50 transition-opacity group hover:text-error"
+              className="flex items-center text-textSecondary active:opacity-50 transition-all hover:text-error py-2"
               aria-label="Switch Role"
             >
-              <LogOut size={20} className="mr-1 group-active:scale-95 transition-transform" />
-              <span className="text-sm font-medium">Switch</span>
+              <LogOut size={18} className="mr-1.5" />
+              <span className="text-xs font-bold uppercase tracking-wider">Switch</span>
             </button>
           </div>
 
-          {/* Center: Title/Logo */}
-          <div className="flex-[2] flex justify-center items-center gap-2">
-             <BrandLogo className="text-xl" />
-             {!isDashboard && (
-               <span className="font-semibold text-lg text-textPrimary truncate border-l border-border pl-2 ml-1">
+          <div className="flex-[2] flex justify-center items-center">
+             {isDashboard ? (
+               <BrandLogo className="text-2xl" />
+             ) : (
+               <span className="font-semibold text-lg text-textPrimary truncate">
                  {pageTitle}
                </span>
              )}
           </div>
 
-          {/* Right: Empty */}
-          <div className="flex-1 flex justify-end">
-          </div>
+          <div className="flex-1"></div>
         </div>
       </div>
 
-      {/* Spacer for Fixed Header on Mobile */}
-      <div className="md:hidden h-[52px] pt-safe w-full flex-shrink-0"></div>
+      {/* Mobile Header Spacer */}
+      <div className="md:hidden h-[56px] pt-safe flex-shrink-0"></div>
 
       {/* Sidebar / Desktop Menu */}
       <div className={cn(
-        "bg-surface border-r border-border md:w-64 fixed md:sticky md:top-0 h-full z-40 transition-transform duration-300 ease-in-out md:translate-x-0 w-64 shadow-xl md:shadow-none flex flex-col"
+        "hidden md:flex bg-surface border-r border-border md:w-64 fixed md:sticky md:top-0 h-full z-40 flex-col"
       )}>
-        <div className="p-6 hidden md:flex flex-col items-start gap-1">
+        <div className="p-8 flex flex-col items-start gap-1">
           <BrandLogo className="text-3xl leading-none" />
-          <p className="text-[10px] text-textSecondary uppercase tracking-widest font-bold mt-0.5">{role} Portal</p>
+          <p className="text-[10px] text-textSecondary uppercase tracking-[0.2em] font-black mt-1">{role} Portal</p>
         </div>
 
-        <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
+        <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path + '/'));
             const Icon = item.icon;
@@ -119,16 +116,19 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors",
+                  "flex items-center space-x-3 px-4 py-3 rounded-xl transition-all",
                   isActive 
-                    ? "bg-primary/10 text-primary font-medium" 
-                    : "text-textSecondary hover:bg-background/50"
+                    ? "bg-primary text-white font-semibold shadow-md shadow-primary/20" 
+                    : "text-textSecondary hover:bg-background/80 hover:text-textPrimary"
                 )}
               >
-                <Icon size={20} />
-                <span>{item.label}</span>
+                <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+                <span className="text-sm">{item.label}</span>
                 {item.badge ? (
-                  <span className="ml-auto bg-secondary text-white text-xs px-2 py-0.5 rounded-full">
+                  <span className={cn(
+                    "ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full",
+                    isActive ? "bg-white text-primary" : "bg-secondary text-white"
+                  )}>
                     {item.badge}
                   </span>
                 ) : null}
@@ -137,25 +137,27 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           })}
         </nav>
 
-        <div className="p-4 border-t border-border space-y-2">
+        <div className="p-4 border-t border-border">
           <button 
             onClick={handleLogout}
-            className="flex items-center space-x-3 px-4 py-3 text-error w-full hover:bg-red-500/10 rounded-lg transition-colors"
+            className="flex items-center space-x-3 px-4 py-3 text-error/80 w-full hover:bg-error/5 hover:text-error rounded-xl transition-all"
           >
             <LogOut size={20} />
-            <span>Switch Role</span>
+            <span className="text-sm font-medium">Log out</span>
           </button>
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto min-h-[calc(100vh-52px)] md:h-screen scroll-smooth pb-24 md:pb-8 bg-background">
-        {children}
+      <main className="flex-1 overflow-y-auto min-h-screen bg-background pb-24 md:pb-0">
+        <div className="p-4 md:p-8 max-w-7xl mx-auto">
+          {children}
+        </div>
       </main>
 
       {/* Mobile Bottom Nav */}
       {(role === 'garage' || role === 'retailer') && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-surface/90 backdrop-blur-lg border-t border-border flex justify-around p-2 z-50 pb-safe shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-surface/95 backdrop-blur-xl border-t border-border flex justify-around px-2 py-1 z-50 pb-safe shadow-[0_-8px_20px_-12px_rgba(0,0,0,0.15)]">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             const Icon = item.icon;
@@ -164,19 +166,22 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex flex-col items-center p-2 rounded-lg text-xs w-full active:scale-95 transition-transform",
-                  isActive ? "text-primary" : "text-textSecondary"
+                  "flex flex-col items-center justify-center p-2 rounded-xl transition-all w-full active:scale-90",
+                  isActive ? "text-primary" : "text-textSecondary/70"
                 )}
               >
                 <div className="relative mb-1">
-                  <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
+                  <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
                   {item.badge ? (
-                    <span className="absolute -top-1 -right-2 bg-secondary text-white text-xs px-1 rounded-full min-w-[16px] h-[16px] flex items-center justify-center border border-surface">
+                    <span className="absolute -top-1.5 -right-2 bg-secondary text-white text-[9px] px-1.5 rounded-full min-w-[16px] h-[16px] flex items-center justify-center border-2 border-surface font-black">
                       {item.badge}
                     </span>
                   ) : null}
                 </div>
-                <span className="text-[10px] font-medium">{item.label}</span>
+                <span className={cn(
+                  "text-[9px] font-bold uppercase tracking-tight",
+                  isActive ? "opacity-100" : "opacity-60"
+                )}>{item.label}</span>
               </Link>
             );
           })}

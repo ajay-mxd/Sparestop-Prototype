@@ -71,6 +71,7 @@
         background-color: rgb(var(--color-background));
         color: rgb(var(--color-text-primary));
         transition: background-color 0.3s ease, color 0.3s ease;
+        -webkit-tap-highlight-color: transparent;
       }
 
       .no-scrollbar::-webkit-scrollbar {
@@ -80,6 +81,9 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
+      
+      .pt-safe { padding-top: var(--safe-area-top); }
+      .pb-safe { padding-bottom: var(--safe-area-bottom); }
     </style>
   <script type="importmap">
 {

@@ -23,15 +23,15 @@ const RoleCard: React.FC<{
 }> = ({ title, description, icon: Icon, onClick, color, buttonText }) => (
   <button 
     onClick={onClick}
-    className="bg-surface p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all border border-border hover:border-primary text-left w-full group relative overflow-hidden"
+    className="bg-surface p-6 md:p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all border border-border hover:border-primary text-left w-full group relative overflow-hidden active:scale-[0.98]"
   >
-    <div className={`absolute top-0 right-0 p-32 opacity-5 rounded-full -mr-10 -mt-10 ${color}`}></div>
-    <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 ${color} text-white shadow-md`}>
-      <Icon size={28} />
+    <div className={`absolute top-0 right-0 p-24 md:p-32 opacity-5 rounded-full -mr-10 -mt-10 ${color}`}></div>
+    <div className={`w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center mb-4 md:mb-6 ${color} text-white shadow-md`}>
+      <Icon size={24} className="md:w-7 md:h-7" />
     </div>
-    <h3 className="text-2xl font-bold text-textPrimary mb-3 group-hover:text-primary transition-colors">{title}</h3>
-    <p className="text-textSecondary mb-8 leading-relaxed">{description}</p>
-    <div className="flex items-center text-primary font-bold group-hover:translate-x-2 transition-transform">
+    <h3 className="text-xl md:text-2xl font-bold text-textPrimary mb-2 md:mb-3 group-hover:text-primary transition-colors">{title}</h3>
+    <p className="text-textSecondary text-sm md:text-base mb-6 md:mb-8 leading-relaxed">{description}</p>
+    <div className="flex items-center text-primary font-bold group-hover:translate-x-2 transition-transform text-sm md:text-base">
       {buttonText} <ArrowRight size={18} className="ml-2" />
     </div>
   </button>
@@ -52,26 +52,28 @@ export const Landing: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col transition-colors duration-300">
-      {/* Navbar for Landing */}
-      <nav className="p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
+      {/* Navbar */}
+      <nav className="p-4 md:p-6 flex justify-between items-center max-w-7xl mx-auto w-full pt-safe">
         <div className="flex items-center gap-3">
-          <BrandLogo className="text-3xl" />
+          <BrandLogo className="text-2xl md:text-3xl" />
         </div>
         
         {/* Theme Toggle */}
         <button 
           onClick={toggleTheme} 
-          className="p-2 rounded-full hover:bg-surface text-textSecondary hover:text-primary transition-colors border border-transparent hover:border-border"
+          className="p-2.5 rounded-full hover:bg-surface text-textSecondary hover:text-primary transition-colors border border-transparent hover:border-border active:scale-90"
           aria-label="Toggle Theme"
         >
-          {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
+          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
         </button>
       </nav>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center p-6 pb-20">
-        <div className="max-w-5xl w-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-6 pb-20">
+        <div className="max-w-4xl w-full">
+          {/* Slogan section removed as requested */}
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
             <RoleCard
               title="For Retailers"
               description="Restock your shop instantly. Access wholesale pricing, manage invoices, and track delivery to your store."
@@ -90,8 +92,8 @@ export const Landing: React.FC = () => {
             />
           </div>
 
-          <div className="mt-16 text-center">
-            <p className="text-xs text-textSecondary">
+          <div className="mt-12 md:mt-16 text-center">
+            <p className="text-[10px] md:text-xs text-textSecondary opacity-60">
               © 2024 <span className="font-sifonn">Sparestop</span> Pvt Ltd. Demo Prototype v1.2
             </p>
           </div>
