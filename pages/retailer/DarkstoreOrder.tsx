@@ -84,7 +84,7 @@ export const DarkstoreOrder: React.FC = () => {
 
   return (
     <div className="pb-24 space-y-4 h-full flex flex-col">
-      <div className="flex justify-between items-center mb-2 shrink-0">
+      <div className="flex justify-between items-center mb-1 shrink-0">
         <div>
            <h1 className="text-2xl font-bold text-textPrimary flex items-center gap-2">
              Darkstore Express
@@ -94,18 +94,18 @@ export const DarkstoreOrder: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 p-1 bg-surface rounded-xl border border-border w-full md:w-fit mb-4 shrink-0">
+      <div className="flex gap-2 p-1 bg-surface rounded-xl border border-border w-full md:w-fit mb-2 shrink-0 shadow-sm">
         <button 
           onClick={() => setActiveTab('new')}
-          className={`flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'new' ? 'bg-primary text-white shadow-md' : 'text-textSecondary hover:bg-background'}`}
+          className={`flex-1 md:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all ${activeTab === 'new' ? 'bg-primary text-white shadow-md' : 'text-textSecondary hover:bg-background'}`}
         >
           New Order
         </button>
         <button 
           onClick={() => setActiveTab('track')}
-          className={`flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'track' ? 'bg-primary text-white shadow-md' : 'text-textSecondary hover:bg-background'}`}
+          className={`flex-1 md:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all ${activeTab === 'track' ? 'bg-primary text-white shadow-md' : 'text-textSecondary hover:bg-background'}`}
         >
-          Track Orders ({darkstoreOrders.length})
+          Track ({darkstoreOrders.length})
         </button>
       </div>
 
@@ -113,24 +113,24 @@ export const DarkstoreOrder: React.FC = () => {
         <div className="flex flex-col lg:flex-row gap-6">
            {/* Catalog Section */}
            <div className="flex-1 space-y-4">
-              <div className="bg-surface p-4 rounded-xl border border-border space-y-3">
+              <div className="bg-surface p-4 rounded-xl border border-border space-y-3 shadow-sm">
                 {/* Text Search */}
                 <div className="relative">
                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-textSecondary" size={18} />
                    <input 
                      type="text" 
                      placeholder="Search parts by name or SKU..."
-                     className="w-full pl-10 pr-4 py-3 border border-border rounded-xl bg-background focus:ring-2 focus:ring-primary outline-none"
+                     className="w-full pl-10 pr-4 py-3 border border-border rounded-xl bg-background focus:ring-2 focus:ring-primary outline-none text-sm"
                      value={searchTerm}
                      onChange={(e) => setSearchTerm(e.target.value)}
                    />
                 </div>
 
-                {/* Vehicle Filter Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                    <div className="relative">
+                {/* Vehicle Filter Grid - Optimized for Mobile */}
+                <div className="grid grid-cols-2 gap-3">
+                    <div className="relative col-span-2 sm:col-span-1">
                         <select 
-                            className="w-full p-2 pl-3 text-sm border border-border rounded-lg bg-background appearance-none"
+                            className="w-full p-2.5 pl-3 text-sm border border-border rounded-lg bg-background appearance-none focus:ring-2 focus:ring-primary outline-none"
                             value={vMake}
                             onChange={(e) => { setVMake(e.target.value); setVModel(''); setVVariant(''); }}
                         >
@@ -141,9 +141,9 @@ export const DarkstoreOrder: React.FC = () => {
                         </select>
                         <CarFront size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-textSecondary pointer-events-none" />
                     </div>
-                    <div className="relative">
+                    <div className="relative col-span-2 sm:col-span-1">
                         <select 
-                            className="w-full p-2 pl-3 text-sm border border-border rounded-lg bg-background appearance-none disabled:opacity-50"
+                            className="w-full p-2.5 pl-3 text-sm border border-border rounded-lg bg-background appearance-none disabled:opacity-50 focus:ring-2 focus:ring-primary outline-none"
                             value={vModel}
                             onChange={(e) => setVModel(e.target.value)}
                             disabled={!vMake}
@@ -157,12 +157,12 @@ export const DarkstoreOrder: React.FC = () => {
                     </div>
                     <div className="relative">
                         <select 
-                            className="w-full p-2 pl-3 text-sm border border-border rounded-lg bg-background appearance-none disabled:opacity-50"
+                            className="w-full p-2.5 pl-3 text-sm border border-border rounded-lg bg-background appearance-none disabled:opacity-50 focus:ring-2 focus:ring-primary outline-none"
                             value={vYear}
                             onChange={(e) => setVYear(e.target.value)}
                             disabled={!vModel}
                         >
-                            <option value="">Select Year</option>
+                            <option value="">Year</option>
                             {Array.from({length: 15}, (_, i) => 2024 - i).map(y => (
                                 <option key={y} value={y}>{y}</option>
                             ))}
@@ -171,12 +171,12 @@ export const DarkstoreOrder: React.FC = () => {
                     </div>
                     <div className="relative">
                         <select 
-                            className="w-full p-2 pl-3 text-sm border border-border rounded-lg bg-background appearance-none disabled:opacity-50"
+                            className="w-full p-2.5 pl-3 text-sm border border-border rounded-lg bg-background appearance-none disabled:opacity-50 focus:ring-2 focus:ring-primary outline-none"
                             value={vVariant}
                             onChange={(e) => setVVariant(e.target.value)}
                             disabled={!vModel}
                         >
-                            <option value="">Select Variant</option>
+                            <option value="">Variant</option>
                             {vMake && vModel && vehicles.find(v => v.make === vMake && v.model === vModel)?.variants.map(v => (
                               <option key={v} value={v}>{v}</option>
                             ))}
@@ -186,8 +186,8 @@ export const DarkstoreOrder: React.FC = () => {
                 </div>
                 
                 {(vModel || vYear || vVariant) && (
-                    <div className="text-xs text-primary font-medium flex items-center gap-1 bg-primary/5 px-2 py-1 rounded w-fit">
-                        <CheckCircle size={10} /> Showing parts for {vMake} {vModel} {vVariant} {vYear ? `(${vYear})` : ''}
+                    <div className="text-xs text-primary font-medium flex items-center gap-1 bg-primary/5 px-2 py-1.5 rounded w-fit border border-primary/10">
+                        <CheckCircle size={10} /> {vMake} {vModel} {vVariant} {vYear}
                     </div>
                 )}
               </div>
@@ -202,9 +202,9 @@ export const DarkstoreOrder: React.FC = () => {
                     <p className="text-xs mt-4">Redirecting to tracking...</p>
                   </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-20 md:pb-0">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pb-24 md:pb-0">
                     {filteredParts.slice(0, 8).map(part => (
-                    <div key={part.id} className="bg-surface p-3 rounded-xl border border-border flex justify-between items-center group hover:border-primary/50 transition-colors shadow-sm">
+                    <div key={part.id} className="bg-surface p-3 rounded-xl border border-border flex justify-between items-center group hover:border-primary/50 transition-colors shadow-sm active:scale-[0.99]">
                         <div>
                         <div className="font-bold text-sm text-textPrimary">{part.name}</div>
                         <div className="text-xs text-textSecondary">{part.sku}</div>
@@ -212,9 +212,9 @@ export const DarkstoreOrder: React.FC = () => {
                         </div>
                         <button 
                         onClick={() => addToOrder(part)}
-                        className="w-8 h-8 flex items-center justify-center bg-primary/10 text-primary rounded-lg hover:bg-primary hover:text-white transition-colors"
+                        className="w-9 h-9 flex items-center justify-center bg-primary/10 text-primary rounded-xl hover:bg-primary hover:text-white transition-colors"
                         >
-                        <Plus size={18} />
+                        <Plus size={20} />
                         </button>
                     </div>
                     ))}
@@ -229,28 +229,30 @@ export const DarkstoreOrder: React.FC = () => {
 
            {/* Checkout Sidebar / Bottom Sheet on Mobile */}
            {orderCart.length > 0 && !orderPlacedId && (
-              <div className="fixed bottom-[56px] left-0 right-0 md:static md:w-96 bg-surface p-5 md:rounded-2xl border-t md:border border-border shadow-[0_-4px_10px_rgba(0,0,0,0.1)] md:shadow-lg flex flex-col h-fit z-30">
-                  <div className="flex items-center gap-2 font-bold text-lg border-b border-border pb-3 mb-4 text-textPrimary">
+              <div className="fixed bottom-[65px] left-0 right-0 md:static md:w-96 bg-surface p-4 md:rounded-2xl border-t md:border border-border shadow-[0_-4px_20px_rgba(0,0,0,0.15)] md:shadow-lg flex flex-col h-fit z-40 rounded-t-2xl">
+                  {/* Pull bar for mobile feel */}
+                  <div className="md:hidden w-12 h-1 bg-gray-300 rounded-full mx-auto mb-3"></div>
+                  
+                  <div className="flex items-center gap-2 font-bold text-lg border-b border-border pb-3 mb-3 text-textPrimary">
                       <ShoppingBag size={20} /> <span className="md:inline">Order Summary</span>
-                      <span className="md:hidden ml-auto text-sm text-primary">{orderCart.length} Items</span>
+                      <span className="md:hidden ml-auto text-sm text-primary bg-primary/10 px-2 py-0.5 rounded-full">{orderCart.length} Items</span>
                   </div>
                   
-                  <div className="hidden md:block space-y-3 max-h-60 overflow-y-auto mb-4">
+                  <div className="hidden md:block space-y-3 max-h-60 overflow-y-auto mb-4 custom-scrollbar">
                       {orderCart.map(item => (
                           <div key={item.part.id} className="flex justify-between items-center">
-                              <span className="text-sm text-textPrimary flex-1 truncate">{item.part.name}</span>
-                              <div className="flex items-center gap-2">
+                              <span className="text-sm text-textPrimary flex-1 truncate pr-2">{item.part.name}</span>
+                              <div className="flex items-center gap-1.5">
                                   <button onClick={() => updateQuantity(item.part.id, -1)} className="text-textSecondary hover:bg-background p-1 rounded"><Minus size={14}/></button>
                                   <span className="text-sm font-medium w-4 text-center">{item.quantity}</span>
                                   <button onClick={() => updateQuantity(item.part.id, 1)} className="text-textSecondary hover:bg-background p-1 rounded"><Plus size={14}/></button>
                               </div>
-                              <span className="text-sm font-bold text-primary w-16 text-right">₹{item.part.price * item.quantity}</span>
+                              <span className="text-sm font-bold text-primary w-14 text-right">₹{item.part.price * item.quantity}</span>
                           </div>
                       ))}
                   </div>
 
-                  <div className="bg-background p-3 rounded-xl border border-border mb-4">
-                      <div className="text-xs font-bold text-textSecondary uppercase mb-2">Delivery Location</div>
+                  <div className="bg-background p-3 rounded-xl border border-border mb-3">
                       <div className="flex gap-2 mb-2">
                           <button 
                             onClick={() => setDeliveryType('store')}
@@ -267,41 +269,45 @@ export const DarkstoreOrder: React.FC = () => {
                       </div>
                       
                       {deliveryType === 'store' ? (
-                          <div className="text-xs text-textSecondary flex items-center">
+                          <div className="text-xs text-textSecondary flex items-center justify-center py-1">
                               <MapPin size={12} className="mr-1" /> Connaught Place, Delhi
                           </div>
                       ) : (
                           <input 
                             type="text"
                             placeholder="Enter Garage Address..."
-                            className="w-full text-xs p-2 rounded border border-border bg-surface"
+                            className="w-full text-xs p-2.5 rounded-lg border border-border bg-surface outline-none focus:border-primary"
                             value={customAddress}
                             onChange={(e) => setCustomAddress(e.target.value)}
                           />
                       )}
                   </div>
 
-                  <div className="flex justify-between items-center mb-4 pt-3 border-t border-border">
-                      <span className="text-textSecondary">Total Payable</span>
+                  <div className="flex justify-between items-center mb-4 pt-2 border-t border-border">
+                      <span className="text-textSecondary text-sm">Total Payable</span>
                       <span className="text-xl font-bold text-textPrimary">₹{totalEstimate}</span>
                   </div>
 
                   <button 
                     onClick={handlePlaceOrder}
                     disabled={isSubmitting || (deliveryType === 'garage' && !customAddress)}
-                    className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-blue-600 shadow-lg disabled:opacity-50 transition-all active:scale-95"
+                    className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-blue-600 shadow-md shadow-blue-500/20 disabled:opacity-50 transition-all active:scale-95 flex items-center justify-center gap-2"
                   >
-                      {isSubmitting ? 'Placing Order...' : 'Confirm Delivery'}
+                      {isSubmitting ? (
+                          <>Placing...</>
+                      ) : (
+                          <>Confirm Order <ArrowRight size={18}/></>
+                      )}
                   </button>
               </div>
            )}
         </div>
       ) : (
         /* TRACKING TAB - Mobile Optimized */
-        <div className="relative h-[calc(100vh-180px)] md:h-[calc(100vh-200px)] flex flex-col lg:grid lg:grid-cols-3 gap-6 overflow-hidden">
+        <div className="relative h-[calc(100vh-160px)] md:h-[calc(100vh-200px)] flex flex-col lg:grid lg:grid-cols-3 gap-6 overflow-hidden">
             
             {/* Orders List (Hidden on Mobile if order selected) */}
-            <div className={`lg:col-span-1 space-y-3 overflow-y-auto pr-1 pb-20 lg:pb-0 ${selectedOrder ? 'hidden lg:block' : 'block'}`}>
+            <div className={`lg:col-span-1 space-y-3 overflow-y-auto pr-1 pb-24 lg:pb-0 ${selectedOrder ? 'hidden lg:block' : 'block'}`}>
                 {darkstoreOrders.length === 0 && (
                     <div className="text-center py-10 text-textSecondary">No active orders</div>
                 )}
@@ -309,7 +315,7 @@ export const DarkstoreOrder: React.FC = () => {
                     <div 
                       key={order.id}
                       onClick={() => setSelectedOrder(order)}
-                      className={`p-4 rounded-xl border cursor-pointer transition-all active:scale-98 ${selectedOrder?.id === order.id ? 'bg-primary/5 border-primary ring-1 ring-primary' : 'bg-surface border-border hover:border-primary/50'}`}
+                      className={`p-4 rounded-xl border cursor-pointer transition-all active:scale-[0.98] ${selectedOrder?.id === order.id ? 'bg-primary/5 border-primary ring-1 ring-primary' : 'bg-surface border-border hover:border-primary/50'}`}
                     >
                         <div className="flex justify-between items-start mb-2">
                             <div>
@@ -338,51 +344,52 @@ export const DarkstoreOrder: React.FC = () => {
                 {selectedOrder ? (
                     <>
                         {/* Mobile Header for Map */}
-                        <div className="lg:hidden bg-surface p-4 border-b border-border flex items-center gap-2 z-10">
-                            <button onClick={handleBackToList} className="p-2 -ml-2 hover:bg-background rounded-full">
-                                <ChevronLeft size={24} className="text-textPrimary" />
+                        <div className="lg:hidden bg-surface p-3 border-b border-border flex items-center gap-3 z-10 shadow-sm">
+                            <button onClick={handleBackToList} className="p-2 -ml-1 hover:bg-background rounded-full border border-border">
+                                <ChevronLeft size={20} className="text-textPrimary" />
                             </button>
                             <div>
-                                <h3 className="font-bold text-textPrimary">Order {selectedOrder.id}</h3>
-                                <p className="text-xs text-textSecondary">{selectedOrder.status.replace(/-/g, ' ')}</p>
+                                <h3 className="font-bold text-textPrimary text-sm">Order {selectedOrder.id}</h3>
+                                <div className="flex items-center gap-1.5">
+                                    <span className={`w-2 h-2 rounded-full ${
+                                        selectedOrder.status === 'delivered' ? 'bg-green-500' : 
+                                        selectedOrder.status === 'out-for-delivery' ? 'bg-orange-500' : 'bg-blue-500'
+                                    }`}></span>
+                                    <p className="text-xs text-textSecondary capitalize">{selectedOrder.status.replace(/-/g, ' ')}</p>
+                                </div>
                             </div>
                         </div>
 
                         {/* Enhanced Map Visual */}
-                        <div className="flex-1 bg-gray-200 relative overflow-hidden group">
+                        <div className="flex-1 bg-gray-100 dark:bg-gray-800 relative overflow-hidden group">
                              {/* Map Texture */}
-                             <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#6b7280 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+                             <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(currentColor 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
                              
                              {/* Road Network */}
-                             {/* Main Horizontal (Top) */}
-                             <div className="absolute top-[20%] left-0 right-0 h-16 bg-white flex items-center justify-center">
-                                <div className="w-full h-0 border-t-2 border-dashed border-gray-300"></div>
+                             <div className="absolute top-[20%] left-0 right-0 h-16 bg-white dark:bg-gray-700 flex items-center justify-center opacity-80">
+                                <div className="w-full h-0 border-t-2 border-dashed border-gray-400 dark:border-gray-500"></div>
                              </div>
                              
-                             {/* Vertical Connector */}
-                             <div className="absolute top-0 bottom-0 left-[45%] w-16 bg-white flex items-center justify-center">
-                                <div className="h-full w-0 border-l-2 border-dashed border-gray-300"></div>
+                             <div className="absolute top-0 bottom-0 left-[45%] w-16 bg-white dark:bg-gray-700 flex items-center justify-center opacity-80">
+                                <div className="h-full w-0 border-l-2 border-dashed border-gray-400 dark:border-gray-500"></div>
                              </div>
 
-                             {/* Horizontal (Bottom) */}
-                             <div className="absolute top-[65%] left-0 right-0 h-16 bg-white flex items-center justify-center">
-                                <div className="w-full h-0 border-t-2 border-dashed border-gray-300"></div>
+                             <div className="absolute top-[65%] left-0 right-0 h-16 bg-white dark:bg-gray-700 flex items-center justify-center opacity-80">
+                                <div className="w-full h-0 border-t-2 border-dashed border-gray-400 dark:border-gray-500"></div>
                              </div>
 
                              {/* Warehouse Marker (Start) */}
                              <div className="absolute top-[13%] left-[10%] flex flex-col items-center z-10">
-                                 <div className="w-12 h-12 bg-gray-800 text-white rounded-lg flex items-center justify-center shadow-xl border-4 border-white">
-                                     <Factory size={24} />
+                                 <div className="w-10 h-10 bg-gray-800 text-white rounded-lg flex items-center justify-center shadow-lg border-2 border-white">
+                                     <Factory size={20} />
                                  </div>
-                                 <span className="bg-white px-2 py-0.5 rounded text-[10px] font-bold mt-1 shadow-sm uppercase tracking-wide">Warehouse</span>
                              </div>
 
                              {/* Destination Marker (End) */}
                              <div className="absolute top-[58%] right-[10%] flex flex-col items-center z-10">
-                                 <div className="w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center shadow-xl border-4 border-white animate-bounce">
-                                     <MapPin size={24} fill="currentColor" />
+                                 <div className="w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg border-2 border-white animate-bounce">
+                                     <MapPin size={20} fill="currentColor" />
                                  </div>
-                                 <span className="bg-white px-2 py-0.5 rounded text-[10px] font-bold mt-1 shadow-sm uppercase tracking-wide">Destination</span>
                              </div>
 
                              {/* Animated Rider */}
@@ -397,23 +404,21 @@ export const DarkstoreOrder: React.FC = () => {
                                 }
                              `}</style>
                              <div 
-                                className="absolute w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center shadow-xl border-2 border-white z-20"
+                                className="absolute w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center shadow-xl border-2 border-white z-20"
                                 style={{ animation: 'riderPath 8s linear infinite' }}
                              >
-                                 <Bike size={20} />
-                                 {/* Pulse Effect */}
-                                 <div className="absolute inset-0 rounded-full bg-primary animate-ping opacity-50"></div>
+                                 <Bike size={16} />
                              </div>
                         </div>
                         
-                        {/* Order Details Footer Panel (Combined Info) */}
-                        <div className="bg-surface border-t border-border pb-safe shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-20">
+                        {/* Order Details Footer Panel */}
+                        <div className="bg-surface border-t border-border pb-safe shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-20 mb-[60px] md:mb-0">
                             {/* Rider & ETA Section */}
                             <div className="p-4 border-b border-border flex justify-between items-center">
                                 {selectedOrder.rider ? (
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center border border-border">
-                                            <Bike size={20} className="text-gray-600" />
+                                        <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden flex items-center justify-center border border-border">
+                                            <Bike size={20} className="text-gray-600 dark:text-gray-300" />
                                         </div>
                                         <div>
                                             <div className="text-sm font-bold text-textPrimary">{selectedOrder.rider.name}</div>
@@ -433,12 +438,11 @@ export const DarkstoreOrder: React.FC = () => {
                                 </div>
                             </div>
 
-                            {/* Order Items */}
-                            <div className="p-4">
-                                <h4 className="font-bold text-xs text-textSecondary uppercase mb-2">Order Items</h4>
+                            {/* Order Items Horizontal Scroll */}
+                            <div className="p-3 bg-background/50">
                                 <div className="flex gap-2 overflow-x-auto no-scrollbar">
                                     {selectedOrder.items.map(item => (
-                                        <div key={item.part.id} className="flex items-center gap-2 bg-background border border-border px-3 py-2 rounded-lg flex-shrink-0">
+                                        <div key={item.part.id} className="flex items-center gap-2 bg-surface border border-border px-3 py-2 rounded-lg flex-shrink-0 shadow-sm">
                                             <div className="w-5 h-5 bg-primary/10 rounded flex items-center justify-center text-xs font-bold text-primary">{item.quantity}</div>
                                             <span className="text-sm text-textPrimary font-medium">{item.part.name}</span>
                                         </div>

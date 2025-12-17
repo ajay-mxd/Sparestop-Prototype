@@ -58,17 +58,13 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   const navItems = getNavItems();
 
-  // Determine if we are on the main dashboard page for the role
-  // Only Retailer Dashboard shows the Logo. Garage Browse shows the Title.
-  const isDashboard = role === 'retailer' && location.pathname === '/retailer/dashboard';
-
   const pageTitle = navItems.find(item => item.path === location.pathname)?.label || 'Sparestop';
 
   return (
-    <div className="min-h-screen bg-background flex flex-col md:flex-row transition-colors duration-300">
+    <div className="min-h-screen bg-background flex flex-col md:flex-row transition-colors duration-300 overflow-x-hidden">
       
       {/* Mobile Header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl border-b border-border pt-safe shadow-sm">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl border-b border-border pt-safe shadow-sm transition-all duration-300">
         <div className="flex items-center justify-between h-[56px] px-4">
           <div className="flex-1">
             <button 
@@ -82,13 +78,9 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           </div>
 
           <div className="flex-[2] flex justify-center items-center">
-             {isDashboard ? (
-               <BrandLogo className="text-2xl" />
-             ) : (
-               <span className="font-semibold text-lg text-textPrimary truncate">
-                 {pageTitle}
-               </span>
-             )}
+             <span className="font-semibold text-lg text-textPrimary truncate animate-in fade-in slide-in-from-bottom-2 duration-300">
+               {pageTitle}
+             </span>
           </div>
 
           <div className="flex-1"></div>
@@ -149,42 +141,49 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto min-h-screen bg-background pb-24 md:pb-0">
-        <div className="p-4 md:p-8 max-w-7xl mx-auto">
+      <main className="flex-1 overflow-y-auto min-h-screen bg-background pb-24 md:pb-0 scroll-smooth">
+        <div className="p-4 md:p-8 max-w-7xl mx-auto w-full">
           {children}
         </div>
       </main>
 
       {/* Mobile Bottom Nav */}
       {(role === 'garage' || role === 'retailer') && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-surface/95 backdrop-blur-xl border-t border-border flex justify-around px-2 py-3 z-50 pb-safe shadow-[0_-8px_20px_-12px_rgba(0,0,0,0.15)]">
-          {navItems.map((item) => {
-            const isActive = location.pathname === item.path;
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={cn(
-                  "flex flex-col items-center justify-center p-2 rounded-xl transition-all w-full active:scale-90",
-                  isActive ? "text-primary" : "text-textSecondary/70"
-                )}
-              >
-                <div className="relative mb-1">
-                  <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
-                  {item.badge ? (
-                    <span className="absolute -top-1.5 -right-2 bg-secondary text-white text-[9px] px-1.5 rounded-full min-w-[16px] h-[16px] flex items-center justify-center border-2 border-surface font-black">
-                      {item.badge}
-                    </span>
-                  ) : null}
-                </div>
-                <span className={cn(
-                  "text-[9px] font-bold uppercase tracking-tight",
-                  isActive ? "opacity-100" : "opacity-60"
-                )}>{item.label}</span>
-              </Link>
-            );
-          })}
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-surface/95 backdrop-blur-xl border-t border-border z-50 pb-safe shadow-[0_-8px_20px_-12px_rgba(0,0,0,0.15)]">
+          <div className="grid grid-cols-5 items-stretch h-[65px]">
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.path;
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={cn(
+                    "flex flex-col items-center justify-center relative transition-all active:scale-95 active:bg-background/50",
+                    isActive ? "text-primary" : "text-textSecondary/70 hover:text-textPrimary"
+                  )}
+                >
+                  <div className="relative mb-1">
+                    <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
+                    {item.badge ? (
+                      <span className="absolute -top-1.5 -right-2 bg-secondary text-white text-[9px] px-1.5 rounded-full min-w-[16px] h-[16px] flex items-center justify-center border-2 border-surface font-black shadow-sm">
+                        {item.badge}
+                      </span>
+                    ) : null}
+                  </div>
+                  <span className={cn(
+                    "text-[10px] font-bold uppercase tracking-tight scale-90",
+                    isActive ? "opacity-100" : "opacity-60"
+                  )}>{item.label}</span>
+                  
+                  {/* Active Indicator Bar */}
+                  {isActive && (
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary rounded-b-full shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>
