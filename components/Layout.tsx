@@ -12,6 +12,15 @@ function cn(...inputs: (string | undefined | null | false)[]) {
   return twMerge(clsx(inputs));
 }
 
+const Logo: React.FC<{ size?: number }> = ({ size = 32 }) => (
+  <div 
+    className="flex items-center justify-center bg-primary text-white rounded-lg font-black shrink-0"
+    style={{ width: size, height: size, fontSize: size * 0.7 }}
+  >
+    S
+  </div>
+);
+
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { role, setRole, cart } = useApp();
   const navigate = useNavigate();
@@ -80,15 +89,15 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           </div>
 
           {/* Center: Title/Logo */}
-          <div className="flex-[2] flex justify-center items-center">
+          <div className="flex-[2] flex justify-center items-center gap-2">
+             <Logo size={24} />
              <span className="font-semibold text-lg text-textPrimary truncate">
                {isDashboard ? 'Sparestop' : pageTitle}
              </span>
           </div>
 
-          {/* Right: Empty (Theme Toggle Removed) */}
+          {/* Right: Empty */}
           <div className="flex-1 flex justify-end">
-            {/* Space reserved for balance */}
           </div>
         </div>
       </div>
@@ -101,10 +110,11 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         "bg-surface border-r border-border md:w-64 fixed md:sticky md:top-0 h-full z-40 transition-transform duration-300 ease-in-out md:translate-x-0 w-64 shadow-xl md:shadow-none flex flex-col",
         isMenuOpen ? "translate-x-0" : "-translate-x-full"
       )}>
-        <div className="p-6 hidden md:flex items-center justify-between">
+        <div className="p-6 hidden md:flex items-center gap-3">
+          <Logo size={36} />
           <div>
-            <h1 className="text-2xl font-bold text-primary">Sparestop</h1>
-            <p className="text-sm text-textSecondary capitalize mt-1">{role} Portal</p>
+            <h1 className="text-xl font-bold text-textPrimary">Sparestop</h1>
+            <p className="text-[10px] text-textSecondary uppercase tracking-widest font-bold mt-0.5">{role} Portal</p>
           </div>
         </div>
 
@@ -152,7 +162,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         {children}
       </main>
 
-      {/* Mobile Bottom Nav (Garage & Retailer) */}
+      {/* Mobile Bottom Nav */}
       {(role === 'garage' || role === 'retailer') && (
         <div className="md:hidden fixed bottom-0 left-0 right-0 bg-surface/90 backdrop-blur-lg border-t border-border flex justify-around p-2 z-50 pb-safe shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
           {navItems.map((item) => {
