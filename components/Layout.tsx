@@ -12,31 +12,6 @@ function cn(...inputs: (string | undefined | null | false)[]) {
   return twMerge(clsx(inputs));
 }
 
-const Logo: React.FC<{ size?: number }> = ({ size = 32 }) => {
-  const [error, setError] = useState(false);
-
-  if (error) {
-    return (
-      <div 
-        className="flex items-center justify-center bg-primary text-white rounded-lg font-black shrink-0"
-        style={{ width: size, height: size, fontSize: size * 0.7 }}
-      >
-        S
-      </div>
-    );
-  }
-
-  return (
-    <img 
-      src="./logo.png" 
-      alt="Sparestop Logo" 
-      className="shrink-0 object-contain rounded-lg"
-      style={{ width: size, height: size }}
-      onError={() => setError(true)}
-    />
-  );
-};
-
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { role, setRole, cart } = useApp();
   const navigate = useNavigate();
@@ -104,10 +79,9 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
             </button>
           </div>
 
-          {/* Center: Title/Logo */}
+          {/* Center: Title */}
           <div className="flex-[2] flex justify-center items-center gap-2">
-             <Logo size={28} />
-             <span className="font-semibold text-lg text-textPrimary truncate brand-font">
+             <span className="font-bold text-2xl text-primary truncate brand-font">
                {isDashboard ? 'Sparestop' : pageTitle}
              </span>
           </div>
@@ -126,12 +100,9 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         "bg-surface border-r border-border md:w-64 fixed md:sticky md:top-0 h-full z-40 transition-transform duration-300 ease-in-out md:translate-x-0 w-64 shadow-xl md:shadow-none flex flex-col",
         isMenuOpen ? "translate-x-0" : "-translate-x-full"
       )}>
-        <div className="p-6 hidden md:flex items-center gap-3">
-          <Logo size={40} />
-          <div>
-            <h1 className="text-xl font-bold text-textPrimary brand-font">Sparestop</h1>
-            <p className="text-[10px] text-textSecondary uppercase tracking-widest font-bold mt-0.5">{role} Portal</p>
-          </div>
+        <div className="p-6 hidden md:flex flex-col items-start gap-1">
+          <h1 className="text-3xl font-bold text-primary brand-font leading-none">Sparestop</h1>
+          <p className="text-[10px] text-textSecondary uppercase tracking-widest font-bold">{role} Portal</p>
         </div>
 
         <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
