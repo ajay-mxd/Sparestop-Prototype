@@ -1,7 +1,6 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
-import { Package, AlertTriangle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { AlertTriangle } from 'lucide-react';
 
 export const RetailerInventory: React.FC = () => {
   const { inventory, partsCatalog } = useApp();
@@ -17,9 +16,7 @@ export const RetailerInventory: React.FC = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-textPrimary">My Inventory</h1>
-        <Link to="/retailer/order" className="text-primary font-medium hover:underline flex items-center">
-          <Package className="mr-2" size={18} /> Order Stock
-        </Link>
+        {/* Order Stock link removed */}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -50,7 +47,7 @@ export const RetailerInventory: React.FC = () => {
         ))}
         {inventoryWithDetails.length === 0 && (
           <div className="col-span-full py-12 text-center text-textSecondary bg-surface rounded-xl border border-dashed border-border">
-            No items in inventory. Start by ordering from the warehouse.
+            No items in inventory.
           </div>
         )}
       </div>

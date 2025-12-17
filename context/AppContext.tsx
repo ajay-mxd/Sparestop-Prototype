@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Role, CartItem, Part, SalesRecord, Order, WarehouseOrder, Invoice } from '../types';
+import { Role, CartItem, Part, SalesRecord, Order, WarehouseOrder, Invoice, DarkstoreOrder } from '../types';
 import { retailers as initialRetailers } from '../data/retailers';
 import { parts as initialParts } from '../data/parts';
 
@@ -17,7 +17,9 @@ interface AppContextType {
   sales: SalesRecord[];
   addSale: (sale: SalesRecord) => void;
   orders: Order[]; // Customer orders
-  warehouseOrders: WarehouseOrder[]; // Retailer restocking orders
+  warehouseOrders: WarehouseOrder[]; // Retailer restocking orders (Legacy)
+  darkstoreOrders: DarkstoreOrder[]; // New Darkstore orders
+  placeDarkstoreOrder: (items: { part: Part; quantity: number }[], deliveryType: 'store' | 'garage', address: string) => Promise<string>;
   placeWarehouseOrder: (items: { part: Part; quantity: number }[]) => Promise<string>;
   invoices: Invoice[];
   payInvoice: (id: string) => void;
@@ -52,10 +54,26 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [inventory, setInventory] = useState(initialRetailers);
   const [partsCatalog, setPartsCatalog] = useState(initialParts);
   
-  const [warehouseOrders, setWarehouseOrders] = useState<WarehouseOrder[]>([
-    { 
-      id: 'WO-1001', date: '2023-11-15', total: 45000, status: 'shipped',
-      items: [{ part: initialParts[0], quantity: 50 }, { part: initialParts[3], quantity: 20 }] 
+  // Legacy warehouse orders (kept for type compatibility but unused in UI now)
+  const [warehouseOrders, setWarehouseOrders] = useState<WarehouseOrder[]>([]);
+
+  // New Darkstore Orders
+  const [darkstoreOrders, setDarkstoreOrders] = useState<DarkstoreOrder[]>([
+    {
+      id: 'DS-9021',
+      date: new Date().toISOString().split('T')[0],
+      items: [{ part: initialParts[2], quantity: 1 }],
+      total: 800,
+      status: 'out-for-delivery',
+      deliveryType: 'garage',
+      deliveryAddress: 'Speedy Garage, Sector 14, Gurgaon',
+      eta: '12 mins',
+      rider: {
+        name: 'Rahul Kumar',
+        vehicleNumber: 'DL-10-SA-4421',
+        phone: '+91 98765 00000',
+        coordinates: { lat: 60, lng: 40 } // Simulated progress (0-100)
+      }
     }
   ]);
   
@@ -158,30 +176,29 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const placeWarehouseOrder = async (items: { part: Part; quantity: number }[]): Promise<string> => {
+    // Kept for compatibility, but logic moved to Darkstore
+    return 'deprecated';
+  };
+
+  const placeDarkstoreOrder = async (items: { part: Part; quantity: number }[], deliveryType: 'store' | 'garage', address: string): Promise<string> => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        const total = items.reduce((sum, item) => sum + (item.part.price * 0.7 * item.quantity), 0);
-        const newOrder: WarehouseOrder = {
-          id: `WO-${Math.floor(Math.random() * 10000)}`,
+        const total = items.reduce((sum, item) => sum + (item.part.price * item.quantity), 0);
+        const newOrder: DarkstoreOrder = {
+          id: `DS-${Math.floor(Math.random() * 10000)}`,
           date: new Date().toISOString().split('T')[0],
           items,
           total,
-          status: 'pending'
+          status: 'confirmed',
+          deliveryType,
+          deliveryAddress: address,
+          eta: 'Searching for Rider...',
+          // Rider will be assigned later in a real app
         };
-        setWarehouseOrders(prev => [newOrder, ...prev]);
         
-        const newInvoice: Invoice = {
-          id: `INV-${Math.floor(Math.random() * 10000)}`,
-          date: new Date().toISOString().split('T')[0],
-          amount: total,
-          dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          status: 'pending',
-          orderId: newOrder.id
-        };
-        setInvoices(prev => [newInvoice, ...prev]);
-        
+        setDarkstoreOrders(prev => [newOrder, ...prev]);
         resolve(newOrder.id);
-      }, 1000);
+      }, 2000);
     });
   };
 
@@ -208,6 +225,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       orders,
       warehouseOrders,
       placeWarehouseOrder,
+      darkstoreOrders,
+      placeDarkstoreOrder,
       invoices,
       payInvoice,
       inventory,

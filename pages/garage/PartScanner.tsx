@@ -4,7 +4,7 @@ import { Scan, X, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export const PartScanner: React.FC = () => {
-  const { partsCatalog, addToCart } = useApp();
+  const { partsCatalog, addToCart, role } = useApp();
   const navigate = useNavigate();
   const [isScanning, setIsScanning] = useState(true);
   const [scannedPart, setScannedPart] = useState<any>(null);
@@ -26,6 +26,23 @@ export const PartScanner: React.FC = () => {
   const handleRescan = () => {
     setScannedPart(null);
     setIsScanning(true);
+  };
+
+  const handleAddToCart = () => {
+    addToCart(scannedPart);
+    if (role === 'retailer') {
+      navigate('/retailer/new-sale');
+    } else {
+      navigate('/garage/cart');
+    }
+  };
+
+  const handleClose = () => {
+    if (role === 'retailer') {
+      navigate('/retailer/dashboard');
+    } else {
+      navigate('/garage');
+    }
   };
 
   return (
@@ -73,10 +90,10 @@ export const PartScanner: React.FC = () => {
 
             <div className="space-y-3">
               <button 
-                onClick={() => { addToCart(scannedPart); navigate('/garage/cart'); }}
+                onClick={handleAddToCart}
                 className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-blue-600 transition-colors"
               >
-                Add to Cart
+                {role === 'retailer' ? 'Add to Sale' : 'Add to Cart'}
               </button>
               <button 
                 onClick={handleRescan}
@@ -91,7 +108,7 @@ export const PartScanner: React.FC = () => {
       
       {/* Overlay Controls */}
       <button 
-        onClick={() => navigate('/garage')}
+        onClick={handleClose}
         className="absolute top-4 right-4 bg-black/40 p-2 rounded-full backdrop-blur-sm hover:bg-black/60 transition-colors"
       >
         <X size={24} className="text-white" />

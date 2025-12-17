@@ -65,6 +65,23 @@ export interface WarehouseOrder {
   status: 'pending' | 'approved' | 'shipped';
 }
 
+export interface DarkstoreOrder {
+  id: string;
+  date: string;
+  items: { part: Part; quantity: number }[];
+  total: number;
+  status: 'confirmed' | 'preparing' | 'out-for-delivery' | 'delivered';
+  deliveryType: 'store' | 'garage';
+  deliveryAddress: string;
+  eta: string; // e.g. "45 mins"
+  rider?: {
+    name: string;
+    vehicleNumber: string;
+    phone: string;
+    coordinates: { lat: number; lng: number }; // 0-100 scale for demo
+  };
+}
+
 export interface Invoice {
   id: string;
   date: string;

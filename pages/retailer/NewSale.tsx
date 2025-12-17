@@ -3,12 +3,12 @@ import { useApp } from '../../context/AppContext';
 import { vehicles } from '../../data/vehicles';
 import { partCategories } from '../../data/parts';
 import { Part } from '../../types';
-import { Search, Plus, Check, Truck, Box, Trash2, ArrowRight, Wrench, ChevronUp, ChevronDown } from 'lucide-react';
+import { Search, Plus, Check, Truck, Box, Trash2, ArrowRight, Wrench, ChevronUp, ChevronDown, CarFront } from 'lucide-react';
 import * as Icons from 'lucide-react';
 
 export const NewSale: React.FC = () => {
   const { partsCatalog, addToCart, removeFromCart, cart, processSale, inventory } = useApp();
-  const [activeTab, setActiveTab] = useState<'vehicle' | 'part'>('vehicle');
+  const [activeTab, setActiveTab] = useState<'vehicle' | 'part' | 'plate'>('vehicle');
   
   // Vehicle First State
   const [vMake, setVMake] = useState('');
@@ -25,6 +25,9 @@ export const NewSale: React.FC = () => {
   const [pYear, setPYear] = useState('');
   const [pVin, setPVin] = useState('');
   const [step, setStep] = useState<'cat' | 'form' | 'results'>('cat');
+
+  // Plate Search State
+  const [plateNumber, setPlateNumber] = useState('');
 
   const [searchResults, setSearchResults] = useState<Part[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -60,6 +63,33 @@ export const NewSale: React.FC = () => {
       }
       setIsProcessing(false);
     }, 800);
+  };
+
+  const handlePlateSearch = () => {
+    if (!plateNumber) return;
+    setIsProcessing(true);
+    // Simulate API lookup
+    setTimeout(() => {
+      // Mock: Always find a Maruti Swift for demo purposes
+      const vehicle = vehicles.find(v => v.model === 'Swift') || vehicles[0];
+      
+      setVMake(vehicle.make);
+      setVModel(vehicle.model);
+      setVYear('2022');
+      setVVariant(vehicle.variants[0]);
+      
+      // Filter parts
+      const results = partsCatalog.filter(p => 
+        p.compatibility.includes(vehicle.id) || p.compatibility.includes('Universal')
+      );
+      setSearchResults(results);
+      
+      // Switch to vehicle tab to show results
+      setActiveTab('vehicle');
+      setOrderSuccess(`Vehicle Identified: ${vehicle.make} ${vehicle.model} (${plateNumber.toUpperCase()})`);
+      setIsProcessing(false);
+      setTimeout(() => setOrderSuccess(''), 4000);
+    }, 1500);
   };
 
   const handlePartFirstSearch = () => {
@@ -112,18 +142,24 @@ export const NewSale: React.FC = () => {
 
       {/* Tabs */}
       <div className="bg-surface rounded-xl shadow-sm border border-border overflow-hidden">
-        <div className="flex border-b border-border">
+        <div className="flex border-b border-border overflow-x-auto no-scrollbar">
           <button
             onClick={() => setActiveTab('vehicle')}
-            className={`flex-1 py-4 text-center font-medium transition-colors ${activeTab === 'vehicle' ? 'bg-primary/10 text-primary border-b-2 border-primary' : 'text-textSecondary hover:bg-white/5'}`}
+            className={`flex-1 min-w-[100px] py-4 text-center font-medium transition-colors text-sm md:text-base whitespace-nowrap px-2 ${activeTab === 'vehicle' ? 'bg-primary/10 text-primary border-b-2 border-primary' : 'text-textSecondary hover:bg-white/5'}`}
           >
-            Vehicle-First Search
+            Vehicle Search
           </button>
           <button
             onClick={() => setActiveTab('part')}
-            className={`flex-1 py-4 text-center font-medium transition-colors ${activeTab === 'part' ? 'bg-primary/10 text-primary border-b-2 border-primary' : 'text-textSecondary hover:bg-white/5'}`}
+            className={`flex-1 min-w-[100px] py-4 text-center font-medium transition-colors text-sm md:text-base whitespace-nowrap px-2 ${activeTab === 'part' ? 'bg-primary/10 text-primary border-b-2 border-primary' : 'text-textSecondary hover:bg-white/5'}`}
           >
-            Part-First Search
+            Part Search
+          </button>
+          <button
+            onClick={() => setActiveTab('plate')}
+            className={`flex-1 min-w-[100px] py-4 text-center font-medium transition-colors text-sm md:text-base whitespace-nowrap px-2 ${activeTab === 'plate' ? 'bg-primary/10 text-primary border-b-2 border-primary' : 'text-textSecondary hover:bg-white/5'}`}
+          >
+            Number Plate
           </button>
         </div>
 
@@ -257,11 +293,48 @@ export const NewSale: React.FC = () => {
             </div>
           )}
 
+          {/* NUMBER PLATE TAB */}
+          {activeTab === 'plate' && (
+            <div className="max-w-xl mx-auto py-10">
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CarFront size={32} className="text-primary" />
+                </div>
+                <h3 className="text-xl font-bold text-textPrimary">Search by Registration</h3>
+                <p className="text-textSecondary text-sm mt-2">Enter the vehicle number to automatically find compatible parts.</p>
+              </div>
+
+              <div className="space-y-4">
+                 <div className="relative">
+                   <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center space-x-2 border-r border-gray-300 pr-2 mr-2">
+                     <span className="text-xs font-bold text-blue-800">IND</span>
+                   </div>
+                   <input 
+                      type="text"
+                      placeholder="MH 02 AB 1234"
+                      className="w-full pl-16 p-4 text-lg font-mono uppercase border-2 border-border rounded-xl focus:border-primary focus:ring-0 outline-none bg-background tracking-wider"
+                      value={plateNumber}
+                      onChange={e => setPlateNumber(e.target.value)}
+                      maxLength={10}
+                   />
+                 </div>
+
+                 <button
+                    onClick={handlePlateSearch}
+                    disabled={plateNumber.length < 4 || isProcessing}
+                    className="w-full bg-primary text-white py-4 rounded-xl font-bold hover:bg-blue-600 disabled:opacity-50 transition-colors flex items-center justify-center text-lg"
+                 >
+                    {isProcessing ? 'Identifying Vehicle...' : 'Identify Vehicle'}
+                 </button>
+              </div>
+            </div>
+          )}
+
           {/* PART FIRST TAB */}
           {activeTab === 'part' && (
             <div className="space-y-6">
               {step === 'cat' && (
-                <div className="grid grid-cols-4 gap-2 md:gap-4">
+                <div className="grid grid-cols-4 gap-4">
                    {partCategories.map(cat => {
                     // @ts-ignore
                     const IconComponent = Icons[cat.icon] || Icons.Box;
@@ -269,10 +342,12 @@ export const NewSale: React.FC = () => {
                       <button 
                         key={cat.id} 
                         onClick={() => { setSelectedCat(cat.name); setStep('form'); }}
-                        className="flex flex-col items-center p-2 md:p-6 border border-border rounded-xl hover:border-primary hover:bg-primary/10 transition-all aspect-square md:aspect-auto justify-center"
+                        className="flex flex-col items-center group w-full"
                       >
-                        <IconComponent size={24} className="text-primary mb-2 md:mb-3 md:w-8 md:h-8" />
-                        <span className="text-[10px] md:text-base font-bold text-textPrimary text-center leading-tight">{cat.name}</span>
+                        <div className="w-14 h-14 bg-surface rounded-xl shadow-sm flex items-center justify-center mb-2 border border-border group-hover:border-primary group-hover:bg-primary/10 transition-colors">
+                          <IconComponent size={24} className="text-primary" />
+                        </div>
+                        <span className="text-xs text-center text-textSecondary font-medium group-hover:text-primary transition-colors">{cat.name}</span>
                       </button>
                     );
                    })}

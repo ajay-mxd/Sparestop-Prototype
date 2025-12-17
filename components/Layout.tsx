@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { 
-  Home, ShoppingCart, Package, Truck, IndianRupee, LogOut, Search, MapPin, Scan
+  Home, ShoppingCart, Package, Truck, IndianRupee, LogOut, Search, MapPin, Scan, ChevronLeft, Zap
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -37,8 +37,8 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           { icon: Home, label: 'Dashboard', path: '/retailer/dashboard' },
           { icon: Package, label: 'Inventory', path: '/retailer/inventory' },
           { icon: ShoppingCart, label: 'New Sale', path: '/retailer/new-sale' },
-          { icon: Truck, label: 'Restock', path: '/retailer/order' },
-          { icon: IndianRupee, label: 'Payments', path: '/retailer/payments' },
+          { icon: Zap, label: 'Darkstore', path: '/retailer/darkstore' },
+          { icon: Scan, label: 'Scanner', path: '/retailer/scanner' },
         ];
       case 'garage':
         return [

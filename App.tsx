@@ -8,14 +8,13 @@ import { Landing } from './pages/Landing';
 import { RetailerDashboard } from './pages/retailer/RetailerDashboard';
 import { NewSale } from './pages/retailer/NewSale';
 import { RetailerInventory } from './pages/retailer/RetailerInventory';
-import { WarehouseOrder } from './pages/retailer/WarehouseOrder';
-import { RetailerPayments } from './pages/retailer/RetailerPayments';
+import { DarkstoreOrder } from './pages/retailer/DarkstoreOrder';
+import { PartScanner } from './pages/garage/PartScanner';
 
 // Garage
 import { GarageHome } from './pages/garage/GarageHome';
 import { StoreLocator } from './pages/garage/StoreLocator';
 import { PartSearch } from './pages/garage/PartSearch';
-import { PartScanner } from './pages/garage/PartScanner';
 import { GarageCart } from './pages/garage/GarageCart';
 
 const App: React.FC = () => {
@@ -31,8 +30,8 @@ const App: React.FC = () => {
             <Route path="/retailer/dashboard" element={<RetailerDashboard />} />
             <Route path="/retailer/new-sale" element={<NewSale />} />
             <Route path="/retailer/inventory" element={<RetailerInventory />} />
-            <Route path="/retailer/order" element={<WarehouseOrder />} />
-            <Route path="/retailer/payments" element={<RetailerPayments />} />
+            <Route path="/retailer/darkstore" element={<DarkstoreOrder />} />
+            <Route path="/retailer/scanner" element={<PartScanner />} />
 
             {/* Garage Routes */}
             <Route path="/garage" element={<GarageHome />} />
