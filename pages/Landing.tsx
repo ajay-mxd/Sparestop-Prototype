@@ -71,7 +71,6 @@ export const Landing: React.FC = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col items-center justify-center p-6 pb-20">
         <div className="max-w-5xl w-full">
-          {/* Text content removed per request */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <RoleCard
               title="For Retailers"
