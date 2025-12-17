@@ -59,8 +59,8 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   const navItems = getNavItems();
 
   // Determine if we are on the main dashboard page for the role
-  const dashboardPath = role === 'retailer' ? '/retailer/dashboard' : '/garage';
-  const isDashboard = location.pathname === dashboardPath;
+  // Only Retailer Dashboard shows the Logo. Garage Browse shows the Title.
+  const isDashboard = role === 'retailer' && location.pathname === '/retailer/dashboard';
 
   const pageTitle = navItems.find(item => item.path === location.pathname)?.label || 'Sparestop';
 
@@ -157,7 +157,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
       {/* Mobile Bottom Nav */}
       {(role === 'garage' || role === 'retailer') && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-surface/95 backdrop-blur-xl border-t border-border flex justify-around px-2 py-1 z-50 pb-safe shadow-[0_-8px_20px_-12px_rgba(0,0,0,0.15)]">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-surface/95 backdrop-blur-xl border-t border-border flex justify-around px-2 py-3 z-50 pb-safe shadow-[0_-8px_20px_-12px_rgba(0,0,0,0.15)]">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             const Icon = item.icon;

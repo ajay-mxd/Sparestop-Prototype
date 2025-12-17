@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Part, DarkstoreOrder as DarkstoreOrderType } from '../../types';
 import { vehicles } from '../../data/vehicles';
-import { Search, ShoppingBag, Plus, Minus, MapPin, Bike, Clock, CheckCircle, Navigation, ArrowRight, ChevronLeft, Filter, CarFront, Calendar, Layers, Phone } from 'lucide-react';
+import { Search, ShoppingBag, Plus, Minus, MapPin, Bike, Clock, CheckCircle, Navigation, ArrowRight, ChevronLeft, Filter, CarFront, Calendar, Layers, Phone, Factory } from 'lucide-react';
 
 export const DarkstoreOrder: React.FC = () => {
   const { partsCatalog, placeDarkstoreOrder, darkstoreOrders } = useApp();
@@ -348,39 +348,61 @@ export const DarkstoreOrder: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Simulated Map */}
-                        <div className="flex-1 bg-[#e5e7eb] relative overflow-hidden group">
-                             {/* Map Background Pattern */}
+                        {/* Enhanced Map Visual */}
+                        <div className="flex-1 bg-gray-200 relative overflow-hidden group">
+                             {/* Map Texture */}
                              <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#6b7280 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
                              
-                             {/* Roads (Simulated) */}
-                             <div className="absolute top-1/2 left-10 right-10 h-3 bg-white/60 rounded-full"></div>
-                             <div className="absolute top-10 bottom-10 left-1/2 w-3 bg-white/60 rounded-full"></div>
-
-                             {/* Warehouse Marker */}
-                             <div className="absolute top-[20%] left-[20%] flex flex-col items-center">
-                                 <div className="w-12 h-12 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-xl z-10 border-4 border-white">
-                                     <span className="text-xl">🏭</span>
-                                 </div>
-                                 <span className="bg-white px-2 py-0.5 rounded text-xs font-bold mt-1 shadow-sm">Darkstore</span>
+                             {/* Road Network */}
+                             {/* Main Horizontal (Top) */}
+                             <div className="absolute top-[20%] left-0 right-0 h-16 bg-white flex items-center justify-center">
+                                <div className="w-full h-0 border-t-2 border-dashed border-gray-300"></div>
+                             </div>
+                             
+                             {/* Vertical Connector */}
+                             <div className="absolute top-0 bottom-0 left-[45%] w-16 bg-white flex items-center justify-center">
+                                <div className="h-full w-0 border-l-2 border-dashed border-gray-300"></div>
                              </div>
 
-                             {/* Destination Marker */}
-                             <div className="absolute bottom-[35%] right-[20%] flex flex-col items-center">
-                                 <div className="w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center shadow-xl z-10 border-4 border-white animate-bounce">
+                             {/* Horizontal (Bottom) */}
+                             <div className="absolute top-[65%] left-0 right-0 h-16 bg-white flex items-center justify-center">
+                                <div className="w-full h-0 border-t-2 border-dashed border-gray-300"></div>
+                             </div>
+
+                             {/* Warehouse Marker (Start) */}
+                             <div className="absolute top-[13%] left-[10%] flex flex-col items-center z-10">
+                                 <div className="w-12 h-12 bg-gray-800 text-white rounded-lg flex items-center justify-center shadow-xl border-4 border-white">
+                                     <Factory size={24} />
+                                 </div>
+                                 <span className="bg-white px-2 py-0.5 rounded text-[10px] font-bold mt-1 shadow-sm uppercase tracking-wide">Warehouse</span>
+                             </div>
+
+                             {/* Destination Marker (End) */}
+                             <div className="absolute top-[58%] right-[10%] flex flex-col items-center z-10">
+                                 <div className="w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center shadow-xl border-4 border-white animate-bounce">
                                      <MapPin size={24} fill="currentColor" />
                                  </div>
-                                 <span className="bg-white px-2 py-0.5 rounded text-xs font-bold mt-1 shadow-sm">Delivery Location</span>
+                                 <span className="bg-white px-2 py-0.5 rounded text-[10px] font-bold mt-1 shadow-sm uppercase tracking-wide">Destination</span>
                              </div>
 
-                             {/* Rider Marker (Animated) */}
-                             <div className="absolute top-[40%] left-[40%] transition-all duration-[5000ms] ease-linear flex flex-col items-center z-20">
-                                  <div className="relative">
-                                     <div className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center shadow-xl border-2 border-white transform -rotate-12">
-                                         <Bike size={20} />
-                                     </div>
-                                     <div className="absolute -inset-4 bg-primary/20 rounded-full animate-ping"></div>
-                                  </div>
+                             {/* Animated Rider */}
+                             <style>{`
+                                @keyframes riderPath {
+                                    0% { top: 20%; left: 14%; transform: translate(-50%, -50%) rotate(0deg); }
+                                    30% { top: 20%; left: 45%; transform: translate(-50%, -50%) rotate(0deg); }
+                                    35% { top: 20%; left: 45%; transform: translate(-50%, -50%) rotate(90deg); }
+                                    60% { top: 65%; left: 45%; transform: translate(-50%, -50%) rotate(90deg); }
+                                    65% { top: 65%; left: 45%; transform: translate(-50%, -50%) rotate(0deg); }
+                                    100% { top: 65%; left: 88%; transform: translate(-50%, -50%) rotate(0deg); }
+                                }
+                             `}</style>
+                             <div 
+                                className="absolute w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center shadow-xl border-2 border-white z-20"
+                                style={{ animation: 'riderPath 8s linear infinite' }}
+                             >
+                                 <Bike size={20} />
+                                 {/* Pulse Effect */}
+                                 <div className="absolute inset-0 rounded-full bg-primary animate-ping opacity-50"></div>
                              </div>
                         </div>
                         
