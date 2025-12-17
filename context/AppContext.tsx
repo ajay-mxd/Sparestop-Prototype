@@ -60,6 +60,26 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   // New Darkstore Orders
   const [darkstoreOrders, setDarkstoreOrders] = useState<DarkstoreOrder[]>([
     {
+      id: 'DS-9023',
+      date: new Date().toISOString().split('T')[0],
+      items: [{ part: initialParts[0], quantity: 2 }],
+      total: 500,
+      status: 'confirmed',
+      deliveryType: 'store',
+      deliveryAddress: 'AutoParts Hub, CP',
+      eta: 'Waiting for acceptance...',
+    },
+    {
+      id: 'DS-9022',
+      date: new Date().toISOString().split('T')[0],
+      items: [{ part: initialParts[4], quantity: 1 }, { part: initialParts[1], quantity: 2 }],
+      total: 2200,
+      status: 'preparing',
+      deliveryType: 'garage',
+      deliveryAddress: 'FixIt workshop, Okhla Phase 3',
+      eta: '45 mins',
+    },
+    {
       id: 'DS-9021',
       date: new Date().toISOString().split('T')[0],
       items: [{ part: initialParts[2], quantity: 1 }],
@@ -73,6 +93,22 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         vehicleNumber: 'DL-10-SA-4421',
         phone: '+91 98765 00000',
         coordinates: { lat: 60, lng: 40 } // Simulated progress (0-100)
+      }
+    },
+    {
+      id: 'DS-9020',
+      date: '2023-11-20',
+      items: [{ part: initialParts[6], quantity: 1 }],
+      total: 4500,
+      status: 'delivered',
+      deliveryType: 'store',
+      deliveryAddress: 'AutoParts Hub, CP',
+      eta: 'Delivered at 10:30 AM',
+      rider: {
+        name: 'Vikram Singh',
+        vehicleNumber: 'DL-3C-RB-9988',
+        phone: '+91 98765 11111',
+        coordinates: { lat: 100, lng: 100 }
       }
     }
   ]);

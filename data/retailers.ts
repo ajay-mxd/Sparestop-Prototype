@@ -8,7 +8,16 @@ export const retailers: Retailer[] = [
     distance: 2.3,
     phone: '+91 98765 43210',
     coordinates: { lat: 28.6304, lng: 77.2177 },
-    inventory: [{ partId: 'p1', quantity: 5 }, { partId: 'p2', quantity: 2 }, { partId: 'p5', quantity: 1 }]
+    inventory: [
+        { partId: 'p1', quantity: 5 }, 
+        { partId: 'p2', quantity: 2 }, 
+        { partId: 'p5', quantity: 1 },
+        { partId: 'p3', quantity: 8 },
+        { partId: 'p4', quantity: 12 },
+        { partId: 'p6', quantity: 0 },
+        { partId: 'p8', quantity: 3 },
+        { partId: 'p10', quantity: 4 }
+    ]
   },
   {
     id: 'r2',

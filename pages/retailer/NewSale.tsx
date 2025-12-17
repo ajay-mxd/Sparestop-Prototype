@@ -3,11 +3,11 @@ import { useApp } from '../../context/AppContext';
 import { vehicles } from '../../data/vehicles';
 import { partCategories } from '../../data/parts';
 import { Part } from '../../types';
-import { Search, Plus, Check, Truck, Box, Trash2, ArrowRight, Wrench, ChevronUp, ChevronDown, CarFront } from 'lucide-react';
+import { Search, Check, Truck, Box, ArrowRight, Wrench, CarFront, MapPin, X, Package, Info, Car, ShoppingBag, Loader2 } from 'lucide-react';
 import * as Icons from 'lucide-react';
 
 export const NewSale: React.FC = () => {
-  const { partsCatalog, addToCart, removeFromCart, cart, processSale, inventory } = useApp();
+  const { partsCatalog, inventory, placeDarkstoreOrder } = useApp();
   const [activeTab, setActiveTab] = useState<'vehicle' | 'part' | 'plate'>('vehicle');
   
   // Vehicle First State
@@ -31,8 +31,11 @@ export const NewSale: React.FC = () => {
 
   const [searchResults, setSearchResults] = useState<Part[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [orderingPartId, setOrderingPartId] = useState<string | null>(null);
   const [orderSuccess, setOrderSuccess] = useState('');
-  const [isCartExpanded, setIsCartExpanded] = useState(false);
+  
+  // Modal State
+  const [selectedItem, setSelectedItem] = useState<{ part: Part; status: any } | null>(null);
 
   // Helpers
   const myInventory = inventory.find(r => r.id === 'r1')?.inventory || [];
@@ -40,12 +43,28 @@ export const NewSale: React.FC = () => {
   const getStockStatus = (part: Part) => {
     const invItem = myInventory.find(i => i.partId === part.id);
     if (invItem && invItem.quantity > 0) {
-      return { label: 'In Store', color: 'text-green-500 bg-green-500/10', icon: Box };
+      return { label: 'In Store', color: 'text-green-500 bg-green-500/10', icon: Box, inStock: true, quantity: invItem.quantity };
     }
     if (part.warehouseStock > 0) {
-      return { label: 'Available in 5hrs', color: 'text-orange-500 bg-orange-500/10', icon: Truck };
+      return { label: 'Warehouse', color: 'text-orange-500 bg-orange-500/10', icon: Truck, inStock: false, quantity: 0 };
     }
-    return { label: 'Out of Stock', color: 'text-red-500 bg-red-500/10', icon: null };
+    return { label: 'Out of Stock', color: 'text-red-500 bg-red-500/10', icon: null, inStock: false, quantity: 0 };
+  };
+
+  // Mock location generator based on SKU (Consistent with Inventory)
+  const getStorageLocation = (sku: string) => {
+    const aisle = (sku.charCodeAt(sku.length - 1) % 10) + 1;
+    const shelf = String.fromCharCode(65 + (sku.charCodeAt(0) % 6)); // A-F
+    return `Aisle ${aisle}, Shelf ${shelf}`;
+  };
+
+  // Helper to get vehicle names from compatibility IDs
+  const getCompatibleVehicles = (part: Part) => {
+    if (part.compatibility.includes('Universal')) return ['Universal Compatibility'];
+    return part.compatibility.map(id => {
+      const v = vehicles.find(veh => veh.id === id);
+      return v ? `${v.make} ${v.model}` : id;
+    });
   };
 
   const handleVehicleSearch = () => {
@@ -112,15 +131,6 @@ export const NewSale: React.FC = () => {
     }, 800);
   };
 
-  const handleCompleteSale = async () => {
-    setIsProcessing(true);
-    await processSale(cart);
-    setOrderSuccess('Sale recorded successfully! Inventory updated.');
-    setIsProcessing(false);
-    setIsCartExpanded(false);
-    setTimeout(() => setOrderSuccess(''), 4000);
-  };
-
   const resetPartSearch = () => {
     setStep('cat');
     setSelectedCat('');
@@ -128,14 +138,31 @@ export const NewSale: React.FC = () => {
     setSearchResults([]);
   };
 
+  const handleDarkstoreOrder = async (part: Part) => {
+    setOrderingPartId(part.id);
+    try {
+      const orderId = await placeDarkstoreOrder(
+        [{ part, quantity: 1 }], 
+        'store', 
+        'AutoParts Hub, CP (My Store)'
+      );
+      setOrderSuccess(`Darkstore order ${orderId} placed! Tracking in Darkstore tab.`);
+      setTimeout(() => setOrderSuccess(''), 5000);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setOrderingPartId(null);
+    }
+  };
+
   return (
-    <div className="space-y-6 pb-32">
+    <div className="space-y-6 pb-20 relative">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-textPrimary">New Sale</h1>
+        <h1 className="text-2xl font-bold text-textPrimary">Part Locator</h1>
       </div>
 
       {orderSuccess && (
-        <div className="bg-green-500/20 text-green-300 p-4 rounded-lg flex items-center shadow-sm border border-green-500/20">
+        <div className="bg-green-500/20 text-green-300 p-4 rounded-lg flex items-center shadow-sm border border-green-500/20 animate-in fade-in slide-in-from-top-4 duration-300">
           <Check size={20} className="mr-2" /> {orderSuccess}
         </div>
       )}
@@ -260,30 +287,53 @@ export const NewSale: React.FC = () => {
                     return (
                       <div key={part.id} className="border border-border rounded-lg p-4 hover:shadow-md transition-shadow bg-surface flex flex-col h-full">
                         <div className="flex gap-4 mb-3">
-                           <div className="w-16 h-16 bg-background rounded-lg flex items-center justify-center text-textSecondary">
+                           <div className="w-16 h-16 bg-background rounded-lg flex items-center justify-center text-textSecondary border border-border">
                              <Box size={24} />
                            </div>
                            <div>
                              <h3 className="font-bold text-textPrimary leading-tight">{part.name}</h3>
-                             <p className="text-xs text-textSecondary mt-1">{part.sku}</p>
-                             <span className="text-xs text-textSecondary bg-background px-2 py-0.5 rounded mt-1 inline-block">{part.category}</span>
+                             <p className="text-xs text-textSecondary mt-1">Ref: {part.sku}</p>
+                             <span className="text-xs text-textSecondary bg-background px-2 py-0.5 rounded mt-1 inline-block border border-border">{part.category}</span>
                            </div>
                         </div>
                         
-                        <div className="mt-auto pt-3 border-t border-dashed border-border flex items-center justify-between">
-                          <div>
-                            <span className="block font-bold text-lg text-primary">₹{part.price}</span>
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 w-fit ${status.color}`}>
-                              {StatusIcon && <StatusIcon size={10} />} {status.label}
-                            </span>
-                          </div>
-                          <button 
-                            onClick={() => addToCart(part)}
-                            className="p-2 bg-primary text-white rounded-lg hover:bg-blue-600 shadow-sm flex items-center gap-1"
-                          >
-                            <Plus size={20} />
-                            <span className="md:hidden text-sm font-bold pr-1">Add</span>
-                          </button>
+                        <div className="mt-auto pt-3 border-t border-dashed border-border flex flex-col gap-2">
+                            <div className="flex justify-between items-center">
+                                <span className="font-bold text-lg text-primary">₹{part.price}</span>
+                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 w-fit ${status.color}`}>
+                                    {StatusIcon && <StatusIcon size={10} />} {status.label}
+                                </span>
+                            </div>
+
+                            {status.inStock ? (
+                                <button 
+                                    onClick={() => setSelectedItem({ part, status })}
+                                    className="w-full py-2 bg-primary/10 border border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2 font-bold text-sm"
+                                >
+                                    <MapPin size={16} /> 
+                                    Shelf {getStorageLocation(part.sku)}
+                                </button>
+                            ) : status.label === 'Warehouse' ? (
+                                <button 
+                                    onClick={() => handleDarkstoreOrder(part)}
+                                    disabled={orderingPartId === part.id}
+                                    className="w-full py-2 bg-orange-500/10 border border-orange-500 text-orange-600 dark:text-orange-400 rounded-lg hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center gap-2 font-bold text-sm group"
+                                >
+                                    {orderingPartId === part.id ? (
+                                      <Loader2 size={16} className="animate-spin" />
+                                    ) : (
+                                      <ShoppingBag size={16} className="group-hover:scale-110 transition-transform" /> 
+                                    )}
+                                    Order from Darkstore
+                                </button>
+                            ) : (
+                                <button 
+                                    disabled
+                                    className="w-full py-2 bg-gray-100 dark:bg-gray-800 text-gray-400 rounded-lg cursor-not-allowed text-sm font-medium border border-border"
+                                >
+                                    Not Available
+                                </button>
+                            )}
                         </div>
                       </div>
                     );
@@ -405,8 +455,6 @@ export const NewSale: React.FC = () => {
                             <option key={y} value={y}>{y}</option>
                           ))}
                         </select>
-
-                        {/* If we assume parts in certain categories are "complex", we might mandate VIN here */}
                         <input 
                            type="text"
                            placeholder="VIN (Optional for simple parts)"
@@ -449,30 +497,53 @@ export const NewSale: React.FC = () => {
                       return (
                         <div key={part.id} className="border border-border rounded-lg p-4 hover:shadow-md transition-shadow bg-surface flex flex-col h-full">
                           <div className="flex gap-4 mb-3">
-                            <div className="w-16 h-16 bg-background rounded-lg flex items-center justify-center text-textSecondary">
+                            <div className="w-16 h-16 bg-background rounded-lg flex items-center justify-center text-textSecondary border border-border">
                               <Box size={24} />
                             </div>
                             <div>
                               <h3 className="font-bold text-textPrimary leading-tight">{part.name}</h3>
-                              <p className="text-xs text-textSecondary mt-1">{part.sku}</p>
-                              <span className="text-xs text-textSecondary bg-background px-2 py-0.5 rounded mt-1 inline-block">{part.category}</span>
+                              <p className="text-xs text-textSecondary mt-1">Ref: {part.sku}</p>
+                              <span className="text-xs text-textSecondary bg-background px-2 py-0.5 rounded mt-1 inline-block border border-border">{part.category}</span>
                             </div>
                           </div>
                           
-                          <div className="mt-auto pt-3 border-t border-dashed border-border flex items-center justify-between">
-                            <div>
-                              <span className="block font-bold text-lg text-primary">₹{part.price}</span>
-                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 w-fit ${status.color}`}>
-                                {StatusIcon && <StatusIcon size={10} />} {status.label}
-                              </span>
-                            </div>
-                            <button 
-                              onClick={() => addToCart(part)}
-                              className="p-2 bg-primary text-white rounded-lg hover:bg-blue-600 shadow-sm flex items-center gap-1"
-                            >
-                              <Plus size={20} />
-                              <span className="md:hidden text-sm font-bold pr-1">Add</span>
-                            </button>
+                          <div className="mt-auto pt-3 border-t border-dashed border-border flex flex-col gap-2">
+                             <div className="flex justify-between items-center">
+                                <span className="font-bold text-lg text-primary">₹{part.price}</span>
+                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 w-fit ${status.color}`}>
+                                    {StatusIcon && <StatusIcon size={10} />} {status.label}
+                                </span>
+                             </div>
+
+                             {status.inStock ? (
+                                <button 
+                                    onClick={() => setSelectedItem({ part, status })}
+                                    className="w-full py-2 bg-primary/10 border border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2 font-bold text-sm"
+                                >
+                                    <MapPin size={16} /> 
+                                    Shelf {getStorageLocation(part.sku)}
+                                </button>
+                             ) : status.label === 'Warehouse' ? (
+                                <button 
+                                    onClick={() => handleDarkstoreOrder(part)}
+                                    disabled={orderingPartId === part.id}
+                                    className="w-full py-2 bg-orange-500/10 border border-orange-500 text-orange-600 dark:text-orange-400 rounded-lg hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center gap-2 font-bold text-sm group"
+                                >
+                                    {orderingPartId === part.id ? (
+                                      <Loader2 size={16} className="animate-spin" />
+                                    ) : (
+                                      <ShoppingBag size={16} className="group-hover:scale-110 transition-transform" /> 
+                                    )}
+                                    Order from Darkstore
+                                </button>
+                             ) : (
+                                <button 
+                                    disabled
+                                    className="w-full py-2 bg-gray-100 dark:bg-gray-800 text-gray-400 rounded-lg cursor-not-allowed text-sm font-medium border border-border"
+                                >
+                                    Not Available
+                                </button>
+                             )}
                           </div>
                         </div>
                       );
@@ -485,53 +556,105 @@ export const NewSale: React.FC = () => {
         </div>
       </div>
 
-      {/* Cart Drawer / Bottom Bar */}
-      {cart.length > 0 && (
-        <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-surface border-t border-border shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.5)] z-30 pb-safe transition-all duration-300">
-          <div className="max-w-4xl mx-auto p-4">
-             {/* Mobile Toggle Handle */}
-             <div className="md:hidden flex justify-center -mt-8 pb-4">
-               <button 
-                 onClick={() => setIsCartExpanded(!isCartExpanded)}
-                 className="bg-surface border border-border px-4 py-1 rounded-t-lg shadow-sm text-primary flex items-center gap-1 text-xs font-bold"
-               >
-                 {isCartExpanded ? <ChevronDown size={14}/> : <ChevronUp size={14}/>} 
-                 {isCartExpanded ? 'Hide Items' : `View ${cart.length} Items`}
-               </button>
-             </div>
-
-             {/* Cart Items Summary */}
-             <div className={`w-full overflow-y-auto transition-all duration-300 ${isCartExpanded ? 'max-h-64 mb-4' : 'max-h-0 md:max-h-32 md:mb-0'}`}>
-                {cart.map(item => (
-                  <div key={item.part.id} className="flex justify-between items-center text-sm py-2 border-b border-border last:border-0">
-                    <div className="flex flex-col md:flex-row md:items-center">
-                       <span className="truncate w-full md:w-40 font-medium text-textPrimary">{item.part.name}</span>
-                       <span className="text-xs text-textSecondary md:hidden">{item.part.sku}</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span className="mx-2 text-textSecondary text-xs">x{item.quantity}</span>
-                      <span className="font-bold text-textPrimary">₹{item.part.price * item.quantity}</span>
-                      <button onClick={() => removeFromCart(item.part.id)} className="ml-2 text-red-400 hover:text-red-600"><Trash2 size={14}/></button>
-                    </div>
+       {/* Product Details Modal */}
+       {selectedItem && (
+          <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-4 sm:p-6 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+              <div className="bg-surface w-full max-w-lg rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in slide-in-from-bottom-10 duration-300 border border-border">
+                  <div className="p-4 border-b border-border flex justify-between items-center sticky top-0 bg-surface z-10">
+                      <div>
+                          <h2 className="text-lg font-bold text-textPrimary">Product Details</h2>
+                          <p className="text-xs text-textSecondary">Part Locator</p>
+                      </div>
+                      <button 
+                        onClick={() => setSelectedItem(null)}
+                        className="p-2 hover:bg-background rounded-full transition-colors"
+                      >
+                          <X size={24} className="text-textSecondary" />
+                      </button>
                   </div>
-                ))}
-             </div>
-             
-             <div className="flex items-center justify-between gap-6 pt-2">
-               <div>
-                 <p className="text-sm text-textSecondary">{cart.length} Items</p>
-                 <p className="text-2xl font-bold text-primary">₹{cart.reduce((sum, i) => sum + (i.part.price * i.quantity), 0)}</p>
-               </div>
-               <button
-                 onClick={handleCompleteSale}
-                 disabled={isProcessing}
-                 className="flex-1 md:flex-none bg-success text-white px-6 py-3 rounded-xl font-bold hover:bg-green-700 disabled:opacity-50 shadow-lg flex items-center justify-center min-w-[140px]"
-               >
-                 {isProcessing ? '...' : 'Complete Sale'}
-               </button>
-             </div>
+                  
+                  <div className="p-6 overflow-y-auto space-y-6">
+                      {/* Basic Info */}
+                      <div className="flex gap-4">
+                          <div className="w-24 h-24 bg-background rounded-xl flex items-center justify-center text-textSecondary shrink-0 border border-border">
+                              <Package size={32} />
+                          </div>
+                          <div>
+                              <h3 className="text-xl font-bold text-textPrimary leading-tight">{selectedItem.part.name}</h3>
+                              <div className="flex items-center gap-2 mt-1">
+                                  <span className="text-sm bg-primary/10 text-primary px-2 py-0.5 rounded border border-primary/20">{selectedItem.part.category}</span>
+                              </div>
+                              <div className="mt-2 text-2xl font-bold text-textPrimary">₹{selectedItem.part.price}</div>
+                          </div>
+                      </div>
+
+                      {/* Store Location & SKU (Prominent) */}
+                      <div className="grid grid-cols-2 gap-4">
+                         {/* Location */}
+                         <div className="bg-primary/5 p-4 rounded-xl border border-primary/20 col-span-2 flex items-center justify-between">
+                              <div>
+                                 <div className="text-xs text-textSecondary mb-1 flex items-center gap-1 font-bold uppercase"><MapPin size={14} className="text-primary"/> Store Location</div>
+                                 <div className="text-2xl font-bold text-textPrimary">
+                                     {getStorageLocation(selectedItem.part.sku)}
+                                 </div>
+                              </div>
+                              <div className="text-right">
+                                  <div className="text-xs text-textSecondary mb-1 font-bold uppercase">Stock Level</div>
+                                  <div className="text-xl font-bold text-green-600">
+                                      {selectedItem.status.quantity} Units
+                                  </div>
+                              </div>
+                         </div>
+                         
+                         {/* Part Number / SKU */}
+                         <div className="bg-background p-3 rounded-xl border border-border col-span-2">
+                             <div className="text-xs text-textSecondary mb-1 flex items-center gap-1 font-bold uppercase"><Info size={12}/> Part Number (SKU)</div>
+                             <div className="text-lg font-mono font-bold text-textPrimary tracking-wide">
+                                 {selectedItem.part.sku}
+                             </div>
+                         </div>
+                      </div>
+
+                      {/* Compatibility */}
+                      <div>
+                          <h4 className="font-bold text-sm text-textPrimary mb-3 flex items-center gap-2">
+                              <Car size={16} /> Compatible Vehicles
+                          </h4>
+                          <div className="bg-background rounded-xl p-3 border border-border">
+                              <ul className="space-y-2">
+                                  {getCompatibleVehicles(selectedItem.part).map((vehicle, idx) => (
+                                      <li key={idx} className="text-sm text-textSecondary flex items-start gap-2">
+                                          <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary shrink-0"></span>
+                                          {vehicle}
+                                      </li>
+                                  ))}
+                              </ul>
+                          </div>
+                      </div>
+
+                      {/* Description */}
+                      {selectedItem.part.description && (
+                          <div>
+                              <h4 className="font-bold text-sm text-textPrimary mb-2 flex items-center gap-2">
+                                  <Info size={16} /> Description
+                              </h4>
+                              <p className="text-sm text-textSecondary leading-relaxed">
+                                  {selectedItem.part.description}
+                              </p>
+                          </div>
+                      )}
+                  </div>
+                  
+                  <div className="p-4 border-t border-border bg-background/50 sticky bottom-0">
+                      <button 
+                        onClick={() => setSelectedItem(null)}
+                        className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-blue-600 transition-colors"
+                      >
+                          Done
+                      </button>
+                  </div>
+              </div>
           </div>
-        </div>
       )}
     </div>
   );
