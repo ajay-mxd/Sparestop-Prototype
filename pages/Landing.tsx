@@ -73,8 +73,8 @@ export const Landing: React.FC = () => {
       <div className="flex-1 flex flex-col items-center justify-center p-6 pb-20">
         <div className="max-w-5xl w-full">
           <div className="text-center mb-16 space-y-4">
-             <h1 className="text-4xl md:text-6xl font-black text-textPrimary tracking-tight flex flex-col md:flex-row items-center justify-center gap-2">
-               The Future of <BrandLogo className="text-5xl md:text-7xl block md:inline" />.
+             <h1 className="text-4xl md:text-6xl font-black text-textPrimary tracking-tight">
+               The Future of Spare Parts.
              </h1>
              <p className="text-textSecondary text-lg max-w-2xl mx-auto">Connecting wholesale supply chains with retail efficiency and mechanic precision.</p>
           </div>

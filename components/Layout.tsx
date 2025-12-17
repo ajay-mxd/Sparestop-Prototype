@@ -71,7 +71,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       {/* Mobile Header (Apple Style) */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md border-b border-border pt-safe transition-all duration-300">
         <div className="flex items-center justify-between h-[52px] px-4">
-          {/* Left: Switch Role Button (Replaces Home/Back) */}
+          {/* Left: Switch Role Button */}
           <div className="flex-1 flex items-start">
             <button 
               onClick={handleLogout}
