@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Part, DarkstoreOrder as DarkstoreOrderType } from '../../types';
 import { vehicles } from '../../data/vehicles';
-import { Search, ShoppingBag, Plus, Minus, MapPin, Bike, Clock, CheckCircle, Navigation, ArrowRight, ChevronLeft, Filter, CarFront, Calendar, Layers, Phone, Factory } from 'lucide-react';
+import { Search, ShoppingBag, Plus, Minus, MapPin, Bike, Clock, CheckCircle, Navigation, ArrowRight, ChevronLeft, Filter, CarFront, Calendar, Layers, Phone, Factory, Package } from 'lucide-react';
 
 export const DarkstoreOrder: React.FC = () => {
   const { partsCatalog, placeDarkstoreOrder, darkstoreOrders } = useApp();
@@ -304,10 +304,10 @@ export const DarkstoreOrder: React.FC = () => {
         </div>
       ) : (
         /* TRACKING TAB - Mobile Optimized */
-        <div className="relative h-[calc(100vh-160px)] md:h-[calc(100vh-200px)] flex flex-col lg:grid lg:grid-cols-3 gap-6 overflow-hidden">
+        <div className="relative h-[calc(100vh-160px)] md:h-[600px] flex flex-col lg:grid lg:grid-cols-3 gap-6 overflow-hidden rounded-2xl border border-border bg-surface shadow-sm">
             
             {/* Orders List (Hidden on Mobile if order selected) */}
-            <div className={`lg:col-span-1 space-y-3 overflow-y-auto pr-1 pb-24 lg:pb-0 ${selectedOrder ? 'hidden lg:block' : 'block'}`}>
+            <div className={`lg:col-span-1 space-y-3 overflow-y-auto p-4 pr-2 pb-24 lg:pb-0 ${selectedOrder ? 'hidden lg:block' : 'block'}`}>
                 {darkstoreOrders.length === 0 && (
                     <div className="text-center py-10 text-textSecondary">No active orders</div>
                 )}
@@ -340,111 +340,103 @@ export const DarkstoreOrder: React.FC = () => {
             </div>
 
             {/* Live Tracking Map View (Full screen on mobile if selected) */}
-            <div className={`lg:col-span-2 bg-surface lg:rounded-2xl border border-border lg:shadow-sm overflow-hidden flex flex-col absolute inset-0 lg:static z-20 ${!selectedOrder ? 'translate-x-full lg:translate-x-0 lg:opacity-50 lg:pointer-events-none' : 'translate-x-0'} transition-transform duration-300 lg:transition-none`}>
+            <div className={`lg:col-span-2 bg-surface flex flex-col absolute inset-0 lg:static z-20 ${!selectedOrder ? 'translate-x-full lg:translate-x-0 lg:opacity-50 lg:pointer-events-none' : 'translate-x-0'} transition-transform duration-300 lg:transition-none`}>
                 {selectedOrder ? (
                     <>
                         {/* Mobile Header for Map */}
-                        <div className="lg:hidden bg-surface p-3 border-b border-border flex items-center gap-3 z-10 shadow-sm">
-                            <button onClick={handleBackToList} className="p-2 -ml-1 hover:bg-background rounded-full border border-border">
-                                <ChevronLeft size={20} className="text-textPrimary" />
-                            </button>
-                            <div>
-                                <h3 className="font-bold text-textPrimary text-sm">Order {selectedOrder.id}</h3>
-                                <div className="flex items-center gap-1.5">
-                                    <span className={`w-2 h-2 rounded-full ${
-                                        selectedOrder.status === 'delivered' ? 'bg-green-500' : 
-                                        selectedOrder.status === 'out-for-delivery' ? 'bg-orange-500' : 'bg-blue-500'
-                                    }`}></span>
-                                    <p className="text-xs text-textSecondary capitalize">{selectedOrder.status.replace(/-/g, ' ')}</p>
+                        <div className="lg:hidden absolute top-4 left-4 right-4 z-30 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <button onClick={handleBackToList} className="w-10 h-10 bg-surface/90 backdrop-blur rounded-full border border-border flex items-center justify-center shadow-lg active:scale-95 transition-transform">
+                                    <ChevronLeft size={20} className="text-textPrimary" />
+                                </button>
+                                <div className="bg-surface/90 backdrop-blur px-4 py-2 rounded-full border border-border shadow-lg">
+                                    <div className="flex items-center gap-2">
+                                        <h3 className="font-bold text-textPrimary text-sm">Order {selectedOrder.id}</h3>
+                                        <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
+                                        <div className="flex items-center gap-1.5">
+                                            <span className={`w-2 h-2 rounded-full ${
+                                                selectedOrder.status === 'delivered' ? 'bg-green-500' : 
+                                                selectedOrder.status === 'out-for-delivery' ? 'bg-orange-500' : 'bg-blue-500'
+                                            }`}></span>
+                                            <p className="text-xs text-textSecondary capitalize">{selectedOrder.status.replace(/-/g, ' ')}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         {/* Enhanced Map Visual */}
-                        <div className="flex-1 bg-gray-100 dark:bg-gray-800 relative overflow-hidden group">
-                             {/* Map Texture */}
-                             <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(currentColor 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
-                             
-                             {/* Road Network */}
-                             <div className="absolute top-[20%] left-0 right-0 h-16 bg-white dark:bg-gray-700 flex items-center justify-center opacity-80">
-                                <div className="w-full h-0 border-t-2 border-dashed border-gray-400 dark:border-gray-500"></div>
+                        <div className="flex-1 bg-gray-100 dark:bg-[#0f1623] relative overflow-hidden group">
+                             {/* Map Texture (Dotted Grid) */}
+                             <div className="absolute inset-0 opacity-[0.05] dark:opacity-[0.1]" 
+                                  style={{ backgroundImage: 'radial-gradient(#64748b 1.5px, transparent 1.5px)', backgroundSize: '24px 24px' }}>
                              </div>
                              
-                             <div className="absolute top-0 bottom-0 left-[45%] w-16 bg-white dark:bg-gray-700 flex items-center justify-center opacity-80">
-                                <div className="h-full w-0 border-l-2 border-dashed border-gray-400 dark:border-gray-500"></div>
-                             </div>
-
-                             <div className="absolute top-[65%] left-0 right-0 h-16 bg-white dark:bg-gray-700 flex items-center justify-center opacity-80">
-                                <div className="w-full h-0 border-t-2 border-dashed border-gray-400 dark:border-gray-500"></div>
-                             </div>
+                             {/* Dashed Guide Lines */}
+                             <div className="absolute top-0 bottom-0 left-[45%] w-px border-l-2 border-dashed border-gray-300 dark:border-gray-700 opacity-60"></div>
+                             <div className="absolute left-0 right-0 top-1/3 h-px border-t-2 border-dashed border-gray-300 dark:border-gray-700 opacity-60"></div>
+                             <div className="absolute left-0 right-0 bottom-1/3 h-px border-t-2 border-dashed border-gray-300 dark:border-gray-700 opacity-60"></div>
 
                              {/* Warehouse Marker (Start) */}
-                             <div className="absolute top-[13%] left-[10%] flex flex-col items-center z-10">
-                                 <div className="w-10 h-10 bg-gray-800 text-white rounded-lg flex items-center justify-center shadow-lg border-2 border-white">
-                                     <Factory size={20} />
+                             <div className="absolute top-[20%] left-[15%] flex flex-col items-center z-10">
+                                 <div className="p-2.5 bg-gray-800/90 backdrop-blur text-white rounded-xl shadow-lg border-2 border-white/10">
+                                     <Factory size={22} />
                                  </div>
                              </div>
 
                              {/* Destination Marker (End) */}
-                             <div className="absolute top-[58%] right-[10%] flex flex-col items-center z-10">
-                                 <div className="w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg border-2 border-white animate-bounce">
-                                     <MapPin size={20} fill="currentColor" />
+                             <div className="absolute top-[58%] right-[15%] flex flex-col items-center z-10">
+                                 <div className="w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(239,68,68,0.4)] border-[3px] border-white animate-bounce">
+                                     <MapPin size={22} fill="currentColor" />
                                  </div>
                              </div>
 
                              {/* Animated Rider */}
                              <style>{`
                                 @keyframes riderPath {
-                                    0% { top: 20%; left: 14%; transform: translate(-50%, -50%) rotate(0deg); }
+                                    0% { top: 20%; left: 15%; transform: translate(-50%, -50%) rotate(0deg); }
                                     30% { top: 20%; left: 45%; transform: translate(-50%, -50%) rotate(0deg); }
                                     35% { top: 20%; left: 45%; transform: translate(-50%, -50%) rotate(90deg); }
-                                    60% { top: 65%; left: 45%; transform: translate(-50%, -50%) rotate(90deg); }
-                                    65% { top: 65%; left: 45%; transform: translate(-50%, -50%) rotate(0deg); }
-                                    100% { top: 65%; left: 88%; transform: translate(-50%, -50%) rotate(0deg); }
+                                    60% { top: 58%; left: 45%; transform: translate(-50%, -50%) rotate(90deg); }
+                                    65% { top: 58%; left: 45%; transform: translate(-50%, -50%) rotate(0deg); }
+                                    100% { top: 58%; left: 85%; transform: translate(-50%, -50%) rotate(0deg); }
                                 }
                              `}</style>
                              <div 
-                                className="absolute w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center shadow-xl border-2 border-white z-20"
+                                className="absolute w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.5)] border-[3px] border-white z-20"
                                 style={{ animation: 'riderPath 8s linear infinite' }}
                              >
-                                 <Bike size={16} />
+                                 <Bike size={20} />
                              </div>
                         </div>
                         
                         {/* Order Details Footer Panel */}
-                        <div className="bg-surface border-t border-border pb-safe shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-20 mb-[60px] md:mb-0">
+                        <div className="bg-surface border-t border-border pb-safe shadow-[0_-8px_30px_rgba(0,0,0,0.1)] z-20 mb-[60px] md:mb-0">
                             {/* Rider & ETA Section */}
-                            <div className="p-4 border-b border-border flex justify-between items-center">
-                                {selectedOrder.rider ? (
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden flex items-center justify-center border border-border">
-                                            <Bike size={20} className="text-gray-600 dark:text-gray-300" />
-                                        </div>
-                                        <div>
-                                            <div className="text-sm font-bold text-textPrimary">{selectedOrder.rider.name}</div>
-                                            <div className="text-xs text-textSecondary">{selectedOrder.rider.vehicleNumber}</div>
-                                        </div>
-                                        <button className="bg-green-500 text-white p-2 rounded-full hover:bg-green-600 shadow-sm ml-2">
-                                            <Phone size={14} />
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className="text-sm text-textSecondary italic">Searching for rider...</div>
-                                )}
+                            <div className="p-5 border-b border-border flex justify-between items-center">
+                                <div className="text-sm text-textSecondary italic flex items-center gap-2">
+                                   {selectedOrder.rider ? (
+                                      <span className="text-textPrimary font-medium not-italic">{selectedOrder.rider.name} is on the way</span>
+                                   ) : (
+                                      "Searching for rider..."
+                                   )}
+                                </div>
                                 
                                 <div className="text-right">
-                                    <div className="text-xl font-bold text-primary leading-none">{selectedOrder.eta}</div>
-                                    <div className="text-[10px] text-textSecondary uppercase font-bold mt-1">Arrival Time</div>
+                                    <div className="text-2xl font-bold text-primary leading-none tracking-tight">{selectedOrder.eta.replace(' mins', '')} <span className="text-sm font-medium">mins</span></div>
+                                    <div className="text-[9px] text-textSecondary uppercase font-black tracking-wider mt-1 opacity-70">Arrival Time</div>
                                 </div>
                             </div>
 
                             {/* Order Items Horizontal Scroll */}
-                            <div className="p-3 bg-background/50">
-                                <div className="flex gap-2 overflow-x-auto no-scrollbar">
+                            <div className="p-4 bg-background/30">
+                                <div className="flex gap-3 overflow-x-auto no-scrollbar">
                                     {selectedOrder.items.map(item => (
-                                        <div key={item.part.id} className="flex items-center gap-2 bg-surface border border-border px-3 py-2 rounded-lg flex-shrink-0 shadow-sm">
-                                            <div className="w-5 h-5 bg-primary/10 rounded flex items-center justify-center text-xs font-bold text-primary">{item.quantity}</div>
-                                            <span className="text-sm text-textPrimary font-medium">{item.part.name}</span>
+                                        <div key={item.part.id} className="flex items-center gap-3 bg-surface border border-border/60 p-1.5 pr-4 rounded-xl flex-shrink-0 shadow-sm min-w-[180px]">
+                                            <div className="w-9 h-9 bg-primary/10 rounded-lg flex items-center justify-center text-sm font-bold text-primary shrink-0">
+                                              {item.quantity}
+                                            </div>
+                                            <span className="text-sm text-textPrimary font-medium truncate">{item.part.name}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -452,7 +444,7 @@ export const DarkstoreOrder: React.FC = () => {
                         </div>
                     </>
                 ) : (
-                    <div className="flex-1 flex flex-col items-center justify-center text-textSecondary h-full">
+                    <div className="flex-1 flex flex-col items-center justify-center text-textSecondary h-full bg-surface">
                         <Navigation size={48} className="mb-4 opacity-20" />
                         <p>Select an order to track live delivery.</p>
                     </div>
